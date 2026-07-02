@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&family=Archivo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{background:#2A2620;font-family:'Spectral',Georgia,serif;-webkit-font-smoothing:antialiased;color:#241E17}
+  .cg-scroll::-webkit-scrollbar{width:9px;height:9px}
+  .cg-scroll::-webkit-scrollbar-thumb{background:#cfc3aa;border-radius:8px;border:2px solid #F7F2E8}
+  .cg-scroll::-webkit-scrollbar-track{background:transparent}
+  @keyframes cgUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  @keyframes cgPulse{0%,100%{opacity:1}50%{opacity:.35}}
+  @keyframes cgSpin{to{transform:rotate(360deg)}}
+  @keyframes cgLiveRing{0%{box-shadow:0 0 0 0 rgba(255,255,255,.45)}70%{box-shadow:0 0 0 8px rgba(255,255,255,0)}100%{box-shadow:0 0 0 0 rgba(255,255,255,0)}}
+  @keyframes cgFreshIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+  input,select,button,textarea{font-family:inherit}
+  ::selection{background:#A8472A;color:#fff}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:radial-gradient(120% 90% at 50% -10%, #3a352c 0%, #2A2620 55%, #211d18 100%);display:flex;flex-direction:column;align-items:center;font-family:'Archivo',sans-serif">
+
+  <!-- PROTOTYPE CHROME -->
+  <div style="width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:14px 26px;padding:14px 22px;color:#e9e0cd">
+    <div style="display:flex;align-items:center;gap:11px;margin-right:auto">
+      <div style="width:30px;height:30px;border-radius:50%;background:#A8472A;display:flex;align-items:center;justify-content:center;color:#F7F2E8;font-family:'Marcellus',serif;font-size:16px;line-height:1">C</div>
+      <div style="font-family:'Marcellus',serif;font-size:17px;letter-spacing:.04em;color:#f3ead7">CanchaGo<span style="opacity:.55;font-style:italic;font-family:'Spectral',serif"> Equestrian</span></div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.5">Vista</span>
+      <div style="display:flex;background:#1d1a15;border:1px solid #463f33;border-radius:9px;padding:3px;gap:2px">
+        <button onClick="{{ goUser }}" style="{{ tabUser }}">Usuario · QR</button>
+        <button onClick="{{ goAdmin }}" style="{{ tabAdmin }}">Asociación</button>
+        <button onClick="{{ goSuper }}" style="{{ tabSuper }}">Central</button>
+      </div>
+    </div>
+
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.5">Pantalla</span>
+      <div style="display:flex;background:#1d1a15;border:1px solid #463f33;border-radius:9px;padding:3px;gap:2px">
+        <button onClick="{{ bpM }}" style="{{ bpMobileS }}" title="Mobile 390">Mobile</button>
+        <button onClick="{{ bpT }}" style="{{ bpTabletS }}" title="Tablet 834">Tablet</button>
+        <button onClick="{{ bpD }}" style="{{ bpDeskS }}" title="Desktop 1280">Desktop</button>
+      </div>
+    </div>
+
+    <select onChange="{{ jump }}" value="{{ screen }}" class="cg-scroll" style="background:#1d1a15;color:#e9e0cd;border:1px solid #463f33;border-radius:9px;padding:8px 11px;font-size:12.5px;font-family:'Archivo',sans-serif;cursor:pointer">
+      <sc-for list="{{ screenOptions }}" as="opt" hint-placeholder-count="6">
+        <option value="{{ opt.id }}">{{ opt.label }}</option>
+      </sc-for>
+    </select>
+  </div>
+
+  <!-- DEVICE STAGE -->
+  <div style="flex:1;width:100%;display:block;text-align:center;padding:6px 18px 40px">
+    <div style="display:inline-block;text-align:left;vertical-align:top;width:{{ frameW }}px;max-width:100%">
+      <div class="cg-scroll" style="height:{{ frameH }}px;max-height:80vh;overflow-y:auto;overflow-x:hidden;background:#F7F2E8;border-radius:20px;box-shadow:0 40px 90px -30px rgba(0,0,0,.7),0 0 0 1px rgba(255,255,255,.06),0 0 0 9px rgba(20,17,13,.55);position:relative">
+
+        <!-- ============ APP ROOT ============ -->
+        <div style="min-height:100%;display:flex;flex-direction:column">
+
+          <!-- ===== USUARIO: TENANT HEADER ===== -->
+          <sc-if value="{{ isUserView }}" hint-placeholder-val="{{ true }}">
+          <div style="position:sticky;top:0;z-index:40;background:rgba(247,242,232,.92);backdrop-filter:blur(10px);border-bottom:1px solid #E3D9C6">
+            <div style="max-width:1180px;margin:0 auto;padding:13px 20px;display:flex;align-items:center;gap:14px">
+              <div onClick="{{ go.landing }}" style="display:flex;align-items:center;gap:11px;cursor:pointer;min-width:0">
+                <div style="width:38px;height:38px;border-radius:9px;background:linear-gradient(140deg,#2f2a22,#4a4234);border:1px solid #5a5040;flex:none;display:flex;align-items:center;justify-content:center;color:#e9d8b8;font-family:'Marcellus',serif;font-size:17px;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)">P</div>
+                <div style="min-width:0">
+                  <div style="font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#A8472A;font-weight:600;white-space:nowrap;line-height:1.3">Asociación organizadora</div>
+                  <div style="font-family:'Spectral',serif;font-size:14.5px;font-weight:600;color:#2A2118;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">A.C.P.C.P. Piura</div>
+                </div>
+              </div>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+                <button onClick="{{ go.busqueda }}" aria-label="Buscar" style="width:40px;height:40px;border-radius:10px;border:1px solid #E0D5BF;background:#FBF7EF;color:#5C5347;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px">⌕</button>
+                <button onClick="{{ go.categorias }}" style="height:40px;padding:0 16px;border-radius:10px;border:1px solid #2A2118;background:#2A2118;color:#F2E9D6;cursor:pointer;font-size:12.5px;font-weight:600;letter-spacing:.02em">Categorías</button>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ===== ADMIN: TOP BAR ===== -->
+          <sc-if value="{{ isAdminChrome }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ impersonating }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#9A6A12;color:#FBF4E3;display:flex;align-items:center;gap:10px;padding:7px 16px;font-family:'Archivo',sans-serif;font-size:12px">
+            <span style="font-weight:700;letter-spacing:.08em">CENTRAL</span>
+            <span style="opacity:.9">Gestionando como <strong>{{ adminAsocCorta }}</strong></span>
+            <button onClick="{{ exitImpersonation }}" style="margin-left:auto;height:30px;padding:0 13px;border:1px solid rgba(255,255,255,.4);border-radius:8px;background:rgba(255,255,255,.12);color:#FBF4E3;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;cursor:pointer">Salir ✕</button>
+          </div>
+          </sc-if>
+          <div style="position:sticky;top:0;z-index:40;background:#221F19;color:#EDE4D2;border-bottom:1px solid #3a352b">
+            <div style="max-width:1180px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:13px">
+              <div onClick="{{ go.dashboard }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;min-width:0">
+                <div style="width:34px;height:34px;border-radius:8px;background:#A8472A;flex:none;display:flex;align-items:center;justify-content:center;color:#F7F2E8;font-family:'Marcellus',serif;font-size:15px">P</div>
+                <div style="min-width:0">
+                  <div style="font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:#caa37d;font-weight:600">Panel · {{ adminAsocCorta }}</div>
+                  <div style="font-family:'Spectral',serif;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ C.nombre }}</div>
+                </div>
+              </div>
+              <nav style="margin-left:auto;display:flex;flex-wrap:wrap;gap:4px;align-items:center">
+                <button onClick="{{ go.dashboard }}" style="{{ navDash }}">Resumen</button>
+                <button onClick="{{ go.concursos }}" style="{{ navConcursos }}">Concursos</button>
+                <button onClick="{{ go.resultados }}" style="{{ navRes }}">Resultados</button>
+                <button onClick="{{ go.carga }}" style="{{ navCarga }}">Catálogo</button>
+                <button onClick="{{ go.cargacat }}" style="{{ navCargaCat }}">Ejemplares</button>
+                <button onClick="{{ go.qr }}" style="{{ navQR }}">QR</button>
+              </nav>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ===== SUPER ADMIN: TOP BAR ===== -->
+          <sc-if value="{{ isSuperChrome }}" hint-placeholder-val="{{ false }}">
+          <div style="position:sticky;top:0;z-index:40;background:#17140F;color:#EDE4D2;border-bottom:1px solid #2f2a20">
+            <div style="max-width:1180px;margin:0 auto;padding:11px 18px;display:flex;align-items:center;gap:13px">
+              <div onClick="{{ go.sdash }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;min-width:0">
+                <div style="width:34px;height:34px;border-radius:8px;background:linear-gradient(140deg,#DFB964,#8A6A28);flex:none;display:flex;align-items:center;justify-content:center;color:#1a140a;font-family:'Marcellus',serif;font-size:15px">C</div>
+                <div style="min-width:0">
+                  <div style="font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#DFB964;font-weight:600">CanchaGo</div>
+                  <div style="font-family:'Spectral',serif;font-size:13px;font-weight:600">Central de operaciones</div>
+                </div>
+              </div>
+              <nav style="margin-left:auto;display:flex;flex-wrap:wrap;gap:4px;align-items:center">
+                <button onClick="{{ go.sdash }}" style="{{ snavDash }}">Resumen</button>
+                <button onClick="{{ go.sasoc }}" style="{{ snavAsoc }}">Asociaciones</button>
+                <button onClick="{{ go.susers }}" style="{{ snavUsers }}">Usuarios</button>
+              </nav>
+            </div>
+          </div>
+          </sc-if>
+
+          <div style="flex:1">
+
+          <!-- ========== ① LANDING ========== -->
+          <sc-if value="{{ isLanding }}" hint-placeholder-val="{{ true }}">
+          <div>
+            <!-- variant switcher -->
+            <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;padding:14px 20px 0">
+              <span style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#a89c83;font-weight:600">Dirección de portada</span>
+              <button onClick="{{ setVarA }}" style="{{ lvA }}">Editorial</button>
+              <button onClick="{{ setVarB }}" style="{{ lvB }}">Programa</button>
+              <button onClick="{{ setVarC }}" style="{{ lvC }}">Galería</button>
+            </div>
+
+            <!-- VARIANT A · Editorial centered -->
+            <sc-if value="{{ varA }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:30px clamp(20px,6%,80px) 8px;text-align:center;max-width:780px;margin:0 auto">
+              <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 13px;border-radius:30px;background:#D9E8F1;color:#2E6486;font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600">
+                <span style="width:7px;height:7px;border-radius:50%;background:#3E7FA6;animation:cgPulse 1.6s infinite"></span>Concurso en curso · {{ C.fechas }}
+              </div>
+              <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#A8472A;font-weight:600;margin:24px 0 12px">{{ C.asocCorta }}</div>
+              <h1 style="font-family:'Marcellus',serif;font-size:clamp(30px,6vw,52px);line-height:1.06;color:#241813;font-weight:400;text-wrap:balance">{{ C.nombre }}</h1>
+              <div style="display:flex;align-items:center;justify-content:center;gap:14px;margin:18px 0 4px;color:#6b6353;font-family:'Spectral',serif;font-size:15px;font-style:italic">
+                <span style="width:32px;height:1px;background:#cbbfa6"></span>{{ C.sede }}<span style="width:32px;height:1px;background:#cbbfa6"></span>
+              </div>
+            </div>
+            </sc-if>
+
+            <!-- VARIANT B · Programa split -->
+            <sc-if value="{{ varB }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:24px clamp(18px,5%,64px) 4px;max-width:1080px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:22px;align-items:center">
+              <div>
+                <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#A8472A;font-weight:600;margin-bottom:14px">{{ C.asocCorta }}</div>
+                <h1 style="font-family:'Marcellus',serif;font-size:clamp(28px,5vw,46px);line-height:1.05;color:#241813;font-weight:400">{{ C.nombre }}</h1>
+                <p style="margin-top:16px;color:#6b6353;font-family:'Spectral',serif;font-size:15.5px;line-height:1.5">{{ C.sede }} · {{ C.fechas }}</p>
+                <div style="display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:6px 14px;border-radius:30px;background:#D9E8F1;color:#2E6486;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600">
+                  <span style="width:7px;height:7px;border-radius:50%;background:#3E7FA6;animation:cgPulse 1.6s infinite"></span>En curso ahora
+                </div>
+              </div>
+              <div style="background:linear-gradient(155deg,#2f2a22,#463d2e);border-radius:18px;padding:24px;color:#EDE4D2;box-shadow:0 20px 40px -22px rgba(0,0,0,.55)">
+                <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#caa37d;font-weight:600">Programa del día</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:16px">
+                  <div><div style="font-family:'Marcellus',serif;font-size:30px;color:#f3ead7">{{ C.totalPruebas }}</div><div style="font-size:11.5px;color:#bcae93;font-family:'Archivo',sans-serif">pruebas y premios</div></div>
+                  <div><div style="font-family:'Marcellus',serif;font-size:30px;color:#9DBE7E">{{ stats.nFin }}</div><div style="font-size:11.5px;color:#bcae93;font-family:'Archivo',sans-serif">categorías cerradas</div></div>
+                  <div><div style="font-family:'Marcellus',serif;font-size:30px;color:#8FC0DE">{{ stats.nCur }}</div><div style="font-size:11.5px;color:#bcae93;font-family:'Archivo',sans-serif">en pista</div></div>
+                  <div><div style="font-family:'Marcellus',serif;font-size:30px;color:#E0B45A">{{ stats.nIni }}</div><div style="font-size:11.5px;color:#bcae93;font-family:'Archivo',sans-serif">por iniciar</div></div>
+                </div>
+              </div>
+            </div>
+            </sc-if>
+
+            <!-- VARIANT C · Galería dark band -->
+            <sc-if value="{{ varC }}" hint-placeholder-val="{{ true }}">
+            <div style="margin:18px clamp(14px,4%,48px) 0;border-radius:20px;overflow:hidden;background:radial-gradient(120% 130% at 80% 0%,#5a4a36 0%,#352d22 55%,#241d16 100%);position:relative">
+              <div style="position:absolute;inset:0;opacity:.10;background-image:repeating-linear-gradient(135deg,#fff 0 1px,transparent 1px 16px)"></div>
+              <div style="position:relative;padding:clamp(30px,7%,64px) clamp(22px,6%,72px);text-align:center;color:#F2E9D6">
+                <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#e0b45a;font-weight:600;margin-bottom:16px">{{ C.asocCorta }}</div>
+                <h1 style="font-family:'Marcellus',serif;font-size:clamp(30px,6vw,54px);line-height:1.05;font-weight:400;color:#FBF4E3;text-wrap:balance">{{ C.nombre }}</h1>
+                <div style="margin-top:16px;color:#cdbfa3;font-family:'Spectral',serif;font-style:italic;font-size:15.5px">{{ C.sede }} · {{ C.fechas }}</div>
+                <div style="display:inline-flex;align-items:center;gap:8px;margin-top:18px;padding:6px 15px;border-radius:30px;background:rgba(143,192,222,.16);color:#bfe0f2;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;border:1px solid rgba(143,192,222,.35)">
+                  <span style="width:7px;height:7px;border-radius:50%;background:#8FC0DE"></span>Concurso en curso
+                </div>
+              </div>
+            </div>
+            </sc-if>
+
+            <!-- SHARED: search + stats + destacados -->
+            <div style="max-width:760px;margin:0 auto;padding:26px clamp(20px,6%,80px) 8px">
+              <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E0D5BF;border-radius:15px;padding:7px;box-shadow:0 10px 26px -16px rgba(60,45,25,.4)">
+                <span style="font-size:19px;color:#A8472A;padding-left:10px">⌕</span>
+                <input value="{{ query }}" onInput="{{ setQuery }}" onKeyDown="{{ onSearchKey }}" placeholder="Buscar caballo, criador o propietario…" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:'Spectral',serif;font-size:16px;color:#2A2118;padding:8px 6px" />
+                <button onClick="{{ submitSearch }}" style="height:46px;padding:0 20px;border:0;border-radius:11px;background:#A8472A;color:#F7F2E8;cursor:pointer;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;letter-spacing:.02em">Buscar</button>
+              </div>
+            </div>
+
+            <div style="max-width:1080px;margin:0 auto;padding:8px clamp(18px,5%,64px) 14px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:16px 0 14px">
+                <h2 style="font-family:'Marcellus',serif;font-size:22px;color:#241813;font-weight:400">En competencia ahora</h2>
+                <button onClick="{{ go.categorias }}" style="background:transparent;border:0;color:#A8472A;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Ver las {{ C.totalPruebas }} pruebas ›</button>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px">
+                <sc-for list="{{ destacados }}" as="d" hint-placeholder-count="3">
+                <div onClick="{{ d.onOpen }}" style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:17px;cursor:pointer;transition:transform .15s,box-shadow .15s" style-hover="transform:translateY(-3px);box-shadow:0 16px 30px -20px rgba(60,45,25,.5)">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+                    <span style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#A8472A;font-weight:600">{{ d.grupo }}</span>
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:10.5px;font-weight:600;background:{{ d.em.bg }};color:{{ d.em.color }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ d.em.dot }}"></span>{{ d.em.label }}</span>
+                  </div>
+                  <div style="font-family:'Spectral',serif;font-size:16.5px;font-weight:600;color:#2A2118;line-height:1.22;margin:11px 0 12px;text-wrap:pretty">{{ d.nombre }}</div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #EFE7D4;padding-top:11px;color:#8c8270;font-family:'Archivo',sans-serif;font-size:12px"><span>{{ d.count }} ejemplares</span><span style="color:#A8472A;font-weight:600">Ver ›</span></div>
+                </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ② CATEGORÍAS ========== -->
+          <sc-if value="{{ isCategorias }}" hint-placeholder-val="{{ true }}">
+          <div style="max-width:1080px;margin:0 auto;padding:24px clamp(18px,5%,64px) 48px">
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#A8472A;font-weight:600">Catálogo del concurso</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(26px,4vw,38px);color:#241813;font-weight:400;margin:6px 0 18px">Categorías y pruebas</h1>
+
+            <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E0D5BF;border-radius:13px;padding:5px 6px;margin-bottom:16px">
+              <span style="font-size:17px;color:#A8472A;padding-left:9px">⌕</span>
+              <input value="{{ catQuery }}" onInput="{{ setCatQuery }}" placeholder="Filtrar por nombre de categoría…" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:'Spectral',serif;font-size:15px;color:#2A2118;padding:8px 4px" />
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:24px">
+              <sc-for list="{{ filterPills }}" as="f" hint-placeholder-count="4">
+                <button onClick="{{ f.onClick }}" style="{{ f.style }}">{{ f.label }}<span style="{{ f.badge }}">{{ f.count }}</span></button>
+              </sc-for>
+            </div>
+
+            <sc-if value="{{ noResults }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align:center;padding:50px 20px;color:#8c8270;font-family:'Spectral',serif;font-style:italic;font-size:16px">No hay categorías que coincidan con este filtro.</div>
+            </sc-if>
+
+            <sc-for list="{{ gruposView }}" as="g" hint-placeholder-count="3">
+            <div style="margin-bottom:30px">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:13px">
+                <h2 style="font-family:'Marcellus',serif;font-size:20px;color:#5C5347;font-weight:400;white-space:nowrap">{{ g.nombre }}</h2>
+                <span style="flex:1;height:1px;background:#E3D9C6"></span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:13px">
+                <sc-for list="{{ g.cats }}" as="c" hint-placeholder-count="4">
+                <div onClick="{{ c.onOpen }}" style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:16px;cursor:pointer;transition:transform .15s,box-shadow .15s;display:flex;flex-direction:column" style-hover="transform:translateY(-3px);box-shadow:0 16px 30px -20px rgba(60,45,25,.5)">
+                  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px">
+                    <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:10.5px;font-weight:600;background:{{ c.em.bg }};color:{{ c.em.color }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ c.em.dot }}"></span>{{ c.em.label }}</span>
+                    <sc-if value="{{ c.gruposLabel }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Archivo',sans-serif;font-size:10px;font-weight:600;color:#8c8270;background:#EFE7D4;padding:3px 8px;border-radius:20px">{{ c.gruposLabel }}</span></sc-if>
+                  </div>
+                  <div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;color:#2A2118;line-height:1.25;flex:1;text-wrap:pretty">{{ c.nombre }}</div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #EFE7D4;margin-top:13px;padding-top:11px;font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270"><span>{{ c.count }} ejemplares</span><span style="color:#A8472A;font-weight:600">Ver ›</span></div>
+                </div>
+                </sc-for>
+              </div>
+            </div>
+            </sc-for>
+          </div>
+          </sc-if>
+
+          <!-- ========== ③ DETALLE CATEGORÍA ========== -->
+          <sc-if value="{{ isDetalle }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:880px;margin:0 auto;padding:18px clamp(18px,5%,64px) 48px">
+            <button onClick="{{ go.categorias }}" style="background:transparent;border:0;color:#8c8270;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0;margin-bottom:6px">‹ Categorías</button>
+            <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+              <div style="flex:1;min-width:200px">
+                <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600">{{ det.grupo }}</div>
+                <h1 style="font-family:'Marcellus',serif;font-size:clamp(23px,3.4vw,32px);color:#241813;font-weight:400;margin-top:5px;line-height:1.1">{{ det.nombre }}</h1>
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;background:{{ det.em.bg }};color:{{ det.em.color }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ det.em.dot }}"></span>{{ det.em.label }}</span>
+            </div>
+
+            <sc-if value="{{ det.hasG }}" hint-placeholder-val="{{ false }}">
+              <div class="cg-scroll" style="display:flex;gap:9px;overflow-x:auto;padding:18px 0 6px">
+                <sc-for list="{{ det.tabs }}" as="t" hint-placeholder-count="3">
+                  <button onClick="{{ t.onClick }}" style="{{ t.style }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ t.em.dot }}"></span>{{ t.nombre }}<span style="opacity:.6;font-weight:500">· {{ t.count }}</span></button>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ det.showPodium }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:18px 0 8px">
+                <sc-for list="{{ det.podium }}" as="p" hint-placeholder-count="3">
+                <div onClick="{{ p.onOpen }}" style="background:#FBF7EF;border:1px solid {{ p.pm.ring }};border-radius:15px;padding:15px;cursor:pointer;display:flex;align-items:center;gap:13px">
+                  <div style="width:46px;height:46px;flex:none;border-radius:50%;background:{{ p.pm.bg }};border:2px solid {{ p.pm.ring }};display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:16px;color:{{ p.pm.color }}">{{ p.pm.label }}</div>
+                  <div style="min-width:0"><div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A8472A;font-weight:600">{{ p.prefijo }}</div><div style="font-family:'Spectral',serif;font-size:15.5px;font-weight:600;color:#2A2118;line-height:1.15">{{ p.nombre }}</div></div>
+                </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:20px 0 10px">
+              <span style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#8c8270;font-weight:600">Ejemplares inscritos</span>
+              <span style="font-family:'Marcellus',serif;font-size:18px;color:#A8472A">{{ det.count }}</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ det.rows }}" as="r" hint-placeholder-count="8">
+              <div onClick="{{ r.onOpen }}" style="display:flex;align-items:center;gap:13px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:13px;padding:12px 14px;cursor:pointer;transition:background .15s" style-hover="background:#fff">
+                <div style="width:40px;height:40px;flex:none;border-radius:10px;background:#F1E9D7;border:1px solid #E5DBC6;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:#6b6353">{{ r.no }}</div>
+                <div style="flex:1;min-width:0">
+                  <div style="display:flex;align-items:baseline;gap:7px;flex-wrap:wrap"><span style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;color:#A8472A">{{ r.prefijo }}</span><span style="font-family:'Spectral',serif;font-size:16px;font-weight:600;color:#2A2118">{{ r.nombre }}</span></div>
+                  <div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9a8f7a;margin-top:1px">{{ r.canchaLabel }}</div>
+                </div>
+                <sc-if value="{{ r.hasPos }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:42px;height:42px;flex:none;border-radius:50%;background:{{ r.pm.bg }};border:2px solid {{ r.pm.ring }};display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:15px;color:{{ r.pm.color }}">{{ r.pm.label }}</div>
+                </sc-if>
+                <sc-if value="{{ r.hasPos }}" hint-placeholder-val="{{ true }}"></sc-if>
+                <span style="color:#cbbfa6;font-size:18px">›</span>
+              </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ④ FICHA EJEMPLAR ========== -->
+          <sc-if value="{{ isFicha }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:760px;margin:0 auto;padding:18px clamp(18px,5%,64px) 48px">
+            <button onClick="{{ fic.onCat }}" style="background:transparent;border:0;color:#8c8270;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0;margin-bottom:8px">‹ {{ fic.catNombre }}</button>
+
+            <div style="background:linear-gradient(160deg,#2f2a22,#473d2d);border-radius:18px;padding:22px clamp(18px,4%,28px);color:#EDE4D2;position:relative;overflow:hidden">
+              <div style="position:absolute;inset:0;opacity:.07;background-image:repeating-linear-gradient(135deg,#fff 0 1px,transparent 1px 18px)"></div>
+              <div style="position:relative;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
+                <div style="flex:1;min-width:200px">
+                  <div style="display:flex;align-items:center;gap:9px;font-family:'Archivo',sans-serif;font-size:11px;color:#caa37d"><span style="font-weight:700;letter-spacing:.1em">N.º {{ fic.no }}</span><span style="opacity:.4">·</span><span>{{ fic.canchaLabel }} cancha</span></div>
+                  <div style="font-family:'Archivo',sans-serif;font-size:12px;letter-spacing:.12em;color:#e0b45a;font-weight:600;margin-top:12px">{{ fic.prefijo }}</div>
+                  <h1 style="font-family:'Marcellus',serif;font-size:clamp(26px,4.5vw,38px);font-weight:400;color:#FBF4E3;line-height:1.05;margin-top:2px">{{ fic.nombre }}</h1>
+                  <div style="font-family:'Spectral',serif;font-style:italic;font-size:14.5px;color:#c9bb9d;margin-top:8px">{{ fic.catNombre }}</div>
+                </div>
+                <sc-if value="{{ fic.hasPos }}" hint-placeholder-val="{{ false }}">
+                  <div style="text-align:center"><div style="width:66px;height:66px;border-radius:50%;background:{{ fic.pm.bg }};border:3px solid {{ fic.pm.ring }};display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:24px;color:{{ fic.pm.color }};box-shadow:0 8px 20px -6px rgba(0,0,0,.5)">{{ fic.pm.label }}</div><div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#caa37d;margin-top:7px">{{ fic.pm.name }}</div></div>
+                </sc-if>
+                <sc-if value="{{ fic.noPos }}" hint-placeholder-val="{{ true }}">
+                  <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;background:rgba(255,255,255,.12);color:#e9dcc0;border:1px solid rgba(255,255,255,.18)"><span style="width:7px;height:7px;border-radius:50%;background:{{ fic.em.dot }}"></span>{{ fic.em.label }}</span>
+                </sc-if>
+              </div>
+            </div>
+
+            <!-- data sections -->
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:13px;margin-top:14px">
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:17px">
+                <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600;margin-bottom:13px">Identificación</div>
+                <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #EFE7D4"><span style="font-family:'Archivo',sans-serif;font-size:12.5px;color:#8c8270">Código de registro</span><span style="font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;color:#2A2118">{{ fic.codigo }}</span></div>
+                <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid #EFE7D4"><span style="font-family:'Archivo',sans-serif;font-size:12.5px;color:#8c8270">Fecha de nacimiento</span><span style="font-family:'Spectral',serif;font-size:14.5px;font-weight:600;color:#2A2118">{{ fic.fechaNac }}</span></div>
+                <div style="display:flex;justify-content:space-between;gap:10px;padding:8px 0"><span style="font-family:'Archivo',sans-serif;font-size:12.5px;color:#8c8270">Microchip</span><span style="font-family:'Archivo',sans-serif;font-size:12.5px;font-weight:600;color:#2A2118;letter-spacing:.01em">{{ fic.microchip }}</span></div>
+              </div>
+
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:17px">
+                <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600;margin-bottom:13px">Genealogía</div>
+                <div style="padding:9px 0;border-bottom:1px solid #EFE7D4"><div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9a8f7a;margin-bottom:3px">Padre</div><div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;color:#2A2118">{{ fic.padreFull }}</div></div>
+                <div style="padding:9px 0"><div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9a8f7a;margin-bottom:3px">Madre</div><div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;color:#2A2118">{{ fic.madreFull }}</div></div>
+              </div>
+
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:17px;grid-column:1/-1">
+                <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600;margin-bottom:13px">Procedencia</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+                  <div><div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9a8f7a;margin-bottom:3px">Criador</div><div style="font-family:'Spectral',serif;font-size:15px;font-weight:600;color:#2A2118;line-height:1.3">{{ fic.criador }}</div></div>
+                  <div><div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9a8f7a;margin-bottom:3px">Propietario</div><div style="font-family:'Spectral',serif;font-size:15px;font-weight:600;color:#2A2118;line-height:1.3">{{ fic.propietario }}</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑤ PREMIOS ESPECIALES ========== -->
+          <sc-if value="{{ isPremios }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:920px;margin:0 auto;padding:24px clamp(18px,5%,64px) 48px">
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#A8472A;font-weight:600">Reconocimientos del concurso</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(26px,4vw,38px);color:#241813;font-weight:400;margin:6px 0 8px">Premios especiales</h1>
+            <p style="font-family:'Spectral',serif;font-size:15.5px;font-style:italic;color:#6b6353;max-width:560px;line-height:1.5">Distinciones que cruzan varias categorías. No tienen lista propia de ejemplares: señalan a un ganador y su reserva entre los animales ya premiados.</p>
+
+            <sc-for list="{{ premiosView }}" as="t" hint-placeholder-count="3">
+            <div style="margin-top:28px">
+              <div style="display:flex;align-items:center;gap:12px;margin-bottom:13px">
+                <h2 style="font-family:'Marcellus',serif;font-size:19px;color:#5C5347;font-weight:400;white-space:nowrap">{{ t.nombre }}</h2>
+                <span style="flex:1;height:1px;background:#E3D9C6"></span>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:13px">
+                <sc-for list="{{ t.items }}" as="p" hint-placeholder-count="2">
+                <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:0;overflow:hidden;display:flex">
+                  <div style="width:5px;flex:none;background:{{ p.em.dot }}"></div>
+                  <div style="flex:1;padding:16px 16px 16px 14px;min-width:0">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+                      <div style="font-family:'Spectral',serif;font-size:16.5px;font-weight:600;color:#2A2118;line-height:1.2;text-wrap:pretty">{{ p.nombre }}</div>
+                      <span style="flex:none;display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:10.5px;font-weight:600;background:{{ p.em.bg }};color:{{ p.em.color }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ p.em.dot }}"></span>{{ p.em.label }}</span>
+                    </div>
+                    <div style="font-family:'Spectral',serif;font-size:13px;font-style:italic;color:#9a8f7a;margin-top:5px">{{ p.nota }}</div>
+                    <sc-if value="{{ p.resuelto }}" hint-placeholder-val="{{ false }}">
+                      <div onClick="{{ p.onGanador }}" style="cursor:pointer;margin-top:13px;background:linear-gradient(135deg,#FBF1D8,#F3E3B8);border:1px solid #E2C97E;border-radius:12px;padding:12px 13px;display:flex;align-items:center;gap:12px">
+                        <div style="width:38px;height:38px;flex:none;border-radius:50%;background:linear-gradient(135deg,#F0D77E,#C9A24B);border:2px solid #C9A24B;display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:13px;color:#7A5A12">1.º</div>
+                        <div style="min-width:0"><div style="font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#9A6A12;font-weight:600">Ganador</div><div style="font-family:'Spectral',serif;font-size:15px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.ganadorNombre }}</div><div style="font-family:'Archivo',sans-serif;font-size:11px;color:#8c7a55;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.ganadorCriador }}</div></div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ p.resuelto }}" hint-placeholder-val="{{ true }}">
+                      <div style="margin-top:13px;border:1px dashed #D8CcB2;border:1px dashed #D8CCB2;border-radius:12px;padding:13px;text-align:center;font-family:'Spectral',serif;font-style:italic;font-size:13.5px;color:#9a8f7a">Se anuncia durante el evento</div>
+                    </sc-if>
+                  </div>
+                </div>
+                </sc-for>
+              </div>
+            </div>
+            </sc-for>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑥ BÚSQUEDA ========== -->
+          <sc-if value="{{ isBusqueda }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:760px;margin:0 auto;padding:24px clamp(18px,5%,64px) 48px">
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(26px,4vw,36px);color:#241813;font-weight:400;margin-bottom:14px">Buscar</h1>
+            <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E0D5BF;border-radius:15px;padding:7px;box-shadow:0 10px 26px -16px rgba(60,45,25,.4)">
+              <span style="font-size:19px;color:#A8472A;padding-left:10px">⌕</span>
+              <input value="{{ query }}" onInput="{{ setQuery }}" placeholder="Nombre del caballo, criador o propietario…" autofocus="true" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:'Spectral',serif;font-size:16px;color:#2A2118;padding:8px 6px" />
+            </div>
+
+            <sc-if value="{{ hasResults }}" hint-placeholder-val="{{ false }}">
+              <div style="font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270;margin:18px 0 10px;letter-spacing:.04em">Coincidencias encontradas</div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ results }}" as="r" hint-placeholder-count="6">
+                <div onClick="{{ r.onOpen }}" style="display:flex;align-items:center;gap:13px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:13px;padding:12px 14px;cursor:pointer" style-hover="background:#fff">
+                  <div style="width:40px;height:40px;flex:none;border-radius:10px;background:#F1E9D7;border:1px solid #E5DBC6;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;color:#6b6353">{{ r.no }}</div>
+                  <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:baseline;gap:7px"><span style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;color:#A8472A">{{ r.prefijo }}</span><span style="font-family:'Spectral',serif;font-size:16px;font-weight:600;color:#2A2118">{{ r.nombre }}</span></div>
+                    <div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9a8f7a;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.catNombre }} · {{ r.criador }}</div>
+                  </div>
+                  <sc-if value="{{ r.pm }}" hint-placeholder-val="{{ false }}"><div style="width:36px;height:36px;flex:none;border-radius:50%;background:{{ r.pm.bg }};border:2px solid {{ r.pm.ring }};display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:13px;color:{{ r.pm.color }}">{{ r.pm.label }}</div></sc-if>
+                  <span style="color:#cbbfa6;font-size:18px">›</span>
+                </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ searchEmpty }}" hint-placeholder-val="{{ false }}">
+              <div style="text-align:center;padding:46px 20px;color:#8c8270"><div style="font-size:34px;opacity:.4">⌕</div><div style="font-family:'Spectral',serif;font-style:italic;font-size:16px;margin-top:8px">Sin coincidencias para tu búsqueda.</div></div>
+            </sc-if>
+            <sc-if value="{{ showSearchHint }}" hint-placeholder-val="{{ true }}">
+              <div style="text-align:center;padding:46px 20px;color:#a89c83;font-family:'Spectral',serif;font-style:italic;font-size:15.5px">Escribe al menos 2 letras para buscar entre los ejemplares del concurso.</div>
+            </sc-if>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑦ LOGIN ========== -->
+          <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ false }}">
+          <div style="min-height:760px;background:radial-gradient(120% 90% at 50% -10%,#3a342a 0%,#2A2620 60%);display:flex;align-items:center;justify-content:center;padding:30px 20px">
+            <div style="width:100%;max-width:420px;background:#F7F2E8;border-radius:20px;padding:28px clamp(20px,5%,32px);box-shadow:0 30px 70px -30px rgba(0,0,0,.6)">
+              <div style="display:flex;align-items:center;gap:11px;margin-bottom:6px">
+                <div style="width:42px;height:42px;border-radius:11px;background:#A8472A;display:flex;align-items:center;justify-content:center;color:#F7F2E8;font-family:'Marcellus',serif;font-size:19px">C</div>
+                <div><div style="font-family:'Marcellus',serif;font-size:18px;color:#241813">CanchaGo Equestrian</div><div style="font-family:'Archivo',sans-serif;font-size:11px;color:#9a8f7a">Panel de administración</div></div>
+              </div>
+              <h1 style="font-family:'Marcellus',serif;font-size:25px;color:#241813;font-weight:400;margin:18px 0 4px">Ingresar al panel</h1>
+              <p style="font-family:'Spectral',serif;font-size:14px;color:#6b6353;margin-bottom:20px">Ingresa con tu cuenta de administrador. Cargaremos tu asociación y sus concursos automáticamente.</p>
+
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="font-family:'Archivo',sans-serif;font-size:11px;color:#8c8270;font-weight:600">Correo del administrador</span><input placeholder="tucorreo@asociacion.pe" style="height:48px;border:1px solid #E0D5BF;border-radius:12px;background:#FBF7EF;padding:0 15px;font-family:'Spectral',serif;font-size:15px;color:#2A2118;outline:none" /></label>
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="font-family:'Archivo',sans-serif;font-size:11px;color:#8c8270;font-weight:600">Contraseña</span><input type="password" value="········" style="height:48px;border:1px solid #E0D5BF;border-radius:12px;background:#FBF7EF;padding:0 15px;font-family:'Spectral',serif;font-size:15px;color:#2A2118;outline:none" /></label>
+              </div>
+              <button onClick="{{ doLogin }}" style="width:100%;height:52px;margin-top:16px;border:0;border-radius:13px;background:#A8472A;color:#F7F2E8;font-family:'Archivo',sans-serif;font-size:15px;font-weight:600;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 24px -10px rgba(168,71,42,.6)">Entrar al panel</button>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑧b MIS CONCURSOS ========== -->
+          <sc-if value="{{ isConcursos }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:920px;margin:0 auto;padding:22px clamp(18px,5%,56px) 48px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:8px">
+              <div>
+                <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600">Tu asociación</div>
+                <h1 style="font-family:'Marcellus',serif;font-size:clamp(24px,3.6vw,32px);color:#241813;font-weight:400;margin-top:4px">Mis concursos</h1>
+              </div>
+              <button onClick="{{ startNewConc }}" style="height:46px;padding:0 18px;border:0;border-radius:12px;background:#A8472A;color:#F7F2E8;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:0 10px 22px -12px rgba(168,71,42,.6)">＋ Crear concurso</button>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px">
+              <span style="display:inline-flex;align-items:center;gap:6px;font-family:'Archivo',sans-serif;font-size:12px;color:#2E6486;background:#D9E8F1;border:1px solid #BBD5E5;border-radius:30px;padding:5px 12px"><span style="width:7px;height:7px;border-radius:50%;background:#3E7FA6"></span>{{ concCounts.en_curso }} en curso</span>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-family:'Archivo',sans-serif;font-size:12px;color:#9A6A12;background:#F3E7C8;border:1px solid #E4D2A1;border-radius:30px;padding:5px 12px"><span style="width:7px;height:7px;border-radius:50%;background:#D29A2A"></span>{{ concCounts.por_iniciar }} por iniciar</span>
+              <span style="display:inline-flex;align-items:center;gap:6px;font-family:'Archivo',sans-serif;font-size:12px;color:#4B6E3C;background:#DDE9CF;border:1px solid #C7D9B3;border-radius:30px;padding:5px 12px"><span style="width:7px;height:7px;border-radius:50%;background:#5C8347"></span>{{ concCounts.finalizado }} finalizados</span>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:9px">
+              <sc-for list="{{ concursosView }}" as="c" hint-placeholder-count="3">
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:16px;padding:16px 17px" style-hover="border-color:#D8C9AB">
+                <div style="display:flex;align-items:flex-start;gap:12px">
+                  <span style="width:11px;height:11px;flex:none;border-radius:50%;background:{{ c.em.dot }};margin-top:5px"></span>
+                  <div style="flex:1;min-width:0">
+                    <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+                      <span style="font-family:'Spectral',serif;font-size:17px;font-weight:600;color:#2A2118;text-wrap:pretty">{{ c.nombre }}</span>
+                      <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:10.5px;font-weight:600;background:{{ c.em.bg }};color:{{ c.em.color }}">{{ c.em.label }}</span>
+                      <sc-if value="{{ c.active }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;letter-spacing:.06em;color:#A8472A;background:#FBEEE6;border:1px solid #E4B7A6;border-radius:30px;padding:3px 9px">● ACTIVO</span></sc-if>
+                    </div>
+                    <div style="font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270;margin-top:4px">{{ c.fechas }} · {{ c.sede }}</div>
+                    <div style="font-family:'Archivo',sans-serif;font-size:12px;color:#9a8f7a;margin-top:2px">{{ c.nCats }} categorías · {{ c.nEj }} ejemplares</div>
+                  </div>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:13px;flex-wrap:wrap">
+                  <button onClick="{{ c.onOpen }}" style="flex:1;min-width:130px;height:42px;border:0;border-radius:11px;background:#2A2118;color:#F2E9D6;font-family:'Archivo',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer">Abrir y gestionar</button>
+                  <button onClick="{{ c.onEdit }}" style="height:42px;padding:0 16px;border:1px solid #E0D5BF;border-radius:11px;background:#fff;color:#5C5347;font-family:'Archivo',sans-serif;font-size:12.5px;font-weight:600;cursor:pointer">Editar datos</button>
+                </div>
+              </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑧c CREAR / EDITAR CONCURSO ========== -->
+          <sc-if value="{{ isNuevoConc }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:620px;margin:0 auto;padding:22px clamp(16px,4%,40px) 48px">
+            <button onClick="{{ go.concursos }}" style="background:transparent;border:0;color:#8c8270;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0">‹ Mis concursos</button>
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#A8472A;font-weight:600;margin-top:4px">{{ concFormTitle }}</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(23px,3.4vw,30px);color:#241813;font-weight:400;margin:4px 0 6px">{{ concFormHead }}</h1>
+            <p style="font-family:'Spectral',serif;font-size:14px;font-style:italic;color:#6b6353;margin-bottom:20px">El concurso se crea "por iniciar". Luego agregas categorías y sus ejemplares, y cuando arranque lo pasas a "en curso".</p>
+
+            <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:13px">
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Nombre del concurso *</span><input value="{{ concFormView.nombre }}" onInput="{{ concFormView.set.nombre }}" placeholder="LXXX Concurso Nacional Oficial" style="{{ inpSt }}"></label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Año</span><input value="{{ concFormView.anio }}" onInput="{{ concFormView.set.anio }}" placeholder="2026" style="{{ inpSt }}"></label>
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Fechas</span><input value="{{ concFormView.fechas }}" onInput="{{ concFormView.set.fechas }}" placeholder="18 – 20 de Set, 2026" style="{{ inpSt }}"></label>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Sede</span><input value="{{ concFormView.sede }}" onInput="{{ concFormView.set.sede }}" placeholder="Coliseo Las Capullanas · Piura" style="{{ inpSt }}"></label>
+              <sc-if value="{{ concFormView.msg }}" hint-placeholder-val="{{ false }}"><div style="background:#F3DCD3;border:1px solid #E4C4B8;border-radius:11px;padding:10px 12px;font-family:'Archivo',sans-serif;font-size:12.5px;color:#8A3B24">{{ concFormView.msg }}</div></sc-if>
+              <button onClick="{{ concFormView.onSave }}" style="height:50px;border:0;border-radius:12px;background:#A8472A;color:#F7F2E8;font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 10px 22px -12px rgba(168,71,42,.6)">{{ concSaveLabel }}</button>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑧ DASHBOARD ========== -->
+          <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:1080px;margin:0 auto;padding:22px clamp(18px,5%,56px) 48px">
+            <button onClick="{{ go.concursos }}" style="display:inline-flex;align-items:center;gap:8px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:30px;padding:5px 14px 5px 6px;cursor:pointer;margin-bottom:14px" style-hover="border-color:#D8C9AB">
+              <span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:10px;font-weight:700;background:{{ activeConcMeta.em.bg }};color:{{ activeConcMeta.em.color }}">{{ activeConcMeta.em.label }}</span>
+              <span style="font-family:'Archivo',sans-serif;font-size:12.5px;font-weight:600;color:#5C5347">Cambiar concurso</span>
+              <span style="color:#cbbfa6;font-size:14px">⇄</span>
+            </button>
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600">{{ C.fechas }}</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(24px,3.6vw,34px);color:#241813;font-weight:400;margin:5px 0 18px;line-height:1.1">{{ C.nombre }}</h1>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:34px;color:#2A2118">{{ stats.nCats }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270">categorías</div></div>
+              <div style="background:#DDE9CF;border:1px solid #C7D9B3;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:34px;color:#4B6E3C">{{ stats.nFin }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#4B6E3C">finalizadas</div></div>
+              <div style="background:#D9E8F1;border:1px solid #BBD5E5;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:34px;color:#2E6486">{{ stats.nCur }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#2E6486">en curso</div></div>
+              <div style="background:#F3E7C8;border:1px solid #E4D2A1;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:34px;color:#9A6A12">{{ stats.nIni }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#9A6A12">por iniciar</div></div>
+            </div>
+
+            <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:17px;margin-top:13px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px"><span style="font-family:'Archivo',sans-serif;font-size:12.5px;font-weight:600;color:#5C5347">Avance del concurso</span><span style="font-family:'Marcellus',serif;font-size:18px;color:#A8472A">{{ pct }}%</span></div>
+              <div style="height:11px;border-radius:20px;background:#EFE7D4;overflow:hidden"><div style="height:100%;width:{{ pct }}%;background:linear-gradient(90deg,#5C8347,#4B6E3C);border-radius:20px;transition:width .5s"></div></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:11px;margin-top:13px">
+              <button onClick="{{ go.resultados }}" style="display:flex;align-items:center;gap:11px;background:#2A2118;border:0;border-radius:14px;padding:16px;cursor:pointer;text-align:left"><span style="font-size:22px">🏇</span><span style="font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;color:#F2E9D6;line-height:1.2">Ingresar<br>resultados</span></button>
+              <button onClick="{{ go.carga }}" style="display:flex;align-items:center;gap:11px;background:#FBF7EF;border:1px solid #E0D5BF;border-radius:14px;padding:16px;cursor:pointer;text-align:left"><span style="font-size:22px">📋</span><span style="font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;color:#2A2118;line-height:1.2">Cargar<br>catálogo</span></button>
+              <button onClick="{{ go.qr }}" style="display:flex;align-items:center;gap:11px;background:#FBF7EF;border:1px solid #E0D5BF;border-radius:14px;padding:16px;cursor:pointer;text-align:left"><span style="font-size:22px">▦</span><span style="font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;color:#2A2118;line-height:1.2">Generar<br>código QR</span></button>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:26px 0 11px"><h2 style="font-family:'Marcellus',serif;font-size:19px;color:#5C5347;font-weight:400">Categorías</h2><span style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9a8f7a">Toca para ingresar resultados</span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ dashCats }}" as="c" hint-placeholder-count="8">
+              <div onClick="{{ c.onManage }}" style="display:flex;align-items:center;gap:12px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:13px;padding:12px 14px;cursor:pointer" style-hover="background:#fff">
+                <span style="width:9px;height:9px;flex:none;border-radius:50%;background:{{ c.em.dot }}"></span>
+                <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:15px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.nombre }}</div><div style="font-family:'Archivo',sans-serif;font-size:11px;color:#9a8f7a">{{ c.grupo }} · {{ c.count }} ejemplares</div></div>
+                <span style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:600;color:{{ c.em.color }};white-space:nowrap">{{ c.em.label }}</span>
+                <span style="color:#cbbfa6;font-size:17px">›</span>
+              </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑨ CARGA DE CATÁLOGO ========== -->
+          <sc-if value="{{ isCarga }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:880px;margin:0 auto;padding:22px clamp(18px,5%,56px) 48px">
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600">Pre-evento</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(24px,3.6vw,32px);color:#241813;font-weight:400;margin:5px 0 18px">Cargar catálogo</h1>
+
+            <div style="background:#FBF7EF;border:2px dashed #D2C3A4;border-radius:16px;padding:26px 20px;text-align:center">
+              <div style="font-size:30px;opacity:.55">⇪</div>
+              <div style="font-family:'Spectral',serif;font-size:17px;font-weight:600;color:#2A2118;margin-top:8px">Importar desde Excel o CSV</div>
+              <div style="font-family:'Archivo',sans-serif;font-size:12.5px;color:#8c8270;margin-top:4px;line-height:1.5">Arrastra la planilla del concurso. Columnas: N.º · Prefijo · Nombre · Código · F. Nac. · Padre · Madre · Criador · Propietario · Microchip</div>
+              <button style="margin-top:14px;height:44px;padding:0 22px;border:0;border-radius:11px;background:#A8472A;color:#F7F2E8;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Seleccionar archivo</button>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;margin:20px 0 14px"><span style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9a8f7a;font-weight:600">o agregar manualmente</span><span style="flex:1;height:1px;background:#E3D9C6"></span></div>
+
+            <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:16px;padding:18px">
+              <div style="font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#2A2118;margin-bottom:13px">Nueva categoría</div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:11px">
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="font-family:'Archivo',sans-serif;font-size:11px;color:#8c8270">Tipo de animal</span><select value="{{ newCatView.grupo }}" onChange="{{ newCatView.set.grupo }}" style="height:46px;border:1px solid #E0D5BF;border-radius:11px;background:#fff;padding:0 12px;font-family:'Spectral',serif;font-size:14px;color:#2A2118"><option>Capones</option><option>Potrancas</option><option>Potrillos</option><option>Potros</option><option>Yeguas</option><option>Pruebas iniciales</option></select></label>
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="font-family:'Archivo',sans-serif;font-size:11px;color:#8c8270">Modalidad</span><select value="{{ newCatView.modalidad }}" onChange="{{ newCatView.set.modalidad }}" style="height:46px;border:1px solid #E0D5BF;border-radius:11px;background:#fff;padding:0 12px;font-family:'Spectral',serif;font-size:14px;color:#2A2118"><option>Freno y Espuelas</option><option>Bozal</option><option>Al Cabestro</option><option>Enfrenadura</option></select></label>
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="font-family:'Archivo',sans-serif;font-size:11px;color:#8c8270">Rango de edad</span><select value="{{ newCatView.edad }}" onChange="{{ newCatView.set.edad }}" style="height:46px;border:1px solid #E0D5BF;border-radius:11px;background:#fff;padding:0 12px;font-family:'Spectral',serif;font-size:14px;color:#2A2118"><option>3 a 4 años</option><option>4 a 10 años</option><option>10 a 12 años</option><option>12 a 14 años</option><option>14 años a más</option><option>1 a 3 años</option></select></label>
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="font-family:'Archivo',sans-serif;font-size:11px;color:#8c8270">N.º de grupos</span><select value="{{ newCatView.grupos }}" onChange="{{ newCatView.set.grupos }}" style="height:46px;border:1px solid #E0D5BF;border-radius:11px;background:#fff;padding:0 12px;font-family:'Spectral',serif;font-size:14px;color:#2A2118"><option>Sin grupos</option><option>2 grupos</option><option>3 grupos</option><option>4 grupos</option></select></label>
+              </div>
+              <sc-if value="{{ newCatView.msg }}" hint-placeholder-val="{{ false }}"><div style="margin-top:12px;background:#DDE9CF;border:1px solid #C7D9B3;border-radius:11px;padding:10px 12px;font-family:'Archivo',sans-serif;font-size:12.5px;color:#4B6E3C">{{ newCatView.msg }}</div></sc-if>
+              <button onClick="{{ newCatView.onAdd }}" style="margin-top:14px;height:46px;padding:0 20px;border:1px solid #2A2118;border-radius:11px;background:#2A2118;color:#F2E9D6;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer">＋ Agregar categoría</button>
+            </div>
+
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin:22px 0 10px">
+              <span style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9a8f7a;font-weight:600">Catálogo cargado · {{ stats.nCats }} categorías</span>
+              <span style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#8c8270">{{ totalEjem }} ejemplares</span>
+            </div>
+            <div style="font-family:'Spectral',serif;font-size:13.5px;font-style:italic;color:#8c8270;margin-bottom:11px">Toca una categoría para registrar sus ejemplares antes del concurso.</div>
+            <sc-if value="{{ catVacio }}" hint-placeholder-val="{{ false }}">
+              <div style="border:2px dashed #E0D5BF;border-radius:16px;padding:30px 18px;text-align:center;background:#FBF7EF">
+                <div style="font-size:26px;opacity:.4">▦</div>
+                <div style="font-family:'Spectral',serif;font-size:14.5px;color:#6b6353;margin-top:6px">Este concurso aún no tiene categorías.</div>
+                <div style="font-family:'Archivo',sans-serif;font-size:12px;color:#9a8f7a;margin-top:3px">Agrega la primera con el formulario de arriba o importa la planilla.</div>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-direction:column;gap:7px">
+              <sc-for list="{{ dashCatsDel }}" as="c" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:11px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:12px;padding:11px 13px">
+                <span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ c.em.dot }}"></span>
+                <div onClick="{{ c.onCarga }}" style="flex:1;min-width:0;cursor:pointer"><div style="font-family:'Spectral',serif;font-size:14.5px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.nombre }}</div></div>
+                <span style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9a8f7a;white-space:nowrap">{{ c.count }} ej.</span>
+                <button onClick="{{ c.onCarga }}" title="Registrar ejemplares" style="height:32px;padding:0 12px;flex:none;border:1px solid #E0D5BF;border-radius:8px;background:#fff;color:#5C5347;font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer">Ejemplares ›</button>
+                <button onClick="{{ c.onDel }}" title="Eliminar categoría" style="{{ c.delStyle }}">×</button>
+              </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑨b INGRESO DE EJEMPLARES ========== -->
+          <sc-if value="{{ isCargaCat }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ cargaNoCat }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:680px;margin:0 auto;padding:22px clamp(16px,4%,40px) 48px">
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600">Pre-evento</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(23px,3.4vw,30px);color:#241813;font-weight:400;margin:5px 0 4px">Ingreso de ejemplares</h1>
+            <p style="font-family:'Spectral',serif;font-size:14.5px;color:#6b6353;margin-bottom:18px">Elige la categoría cuyo padrón quieres completar.</p>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ dashCats }}" as="c" hint-placeholder-count="8">
+              <div onClick="{{ c.onCarga }}" style="display:flex;align-items:center;gap:12px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:14px;padding:14px 15px;cursor:pointer" style-hover="background:#fff">
+                <span style="width:10px;height:10px;flex:none;border-radius:50%;background:{{ c.em.dot }}"></span>
+                <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:15.5px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.nombre }}</div><div style="font-family:'Archivo',sans-serif;font-size:11px;color:#9a8f7a">{{ c.count }} ejemplares</div></div>
+                <span style="color:#cbbfa6;font-size:17px">›</span>
+              </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+          <sc-if value="{{ cargaV }}" hint-placeholder-val="{{ true }}">
+          <div style="max-width:920px;margin:0 auto;padding:20px clamp(16px,4%,48px) 60px">
+            <button onClick="{{ go.carga }}" style="background:transparent;border:0;color:#8c8270;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0">‹ Catálogo</button>
+            <div style="font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#A8472A;font-weight:600;margin-top:4px">Pre-evento · {{ cargaV.grupo }}</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(21px,3.2vw,29px);color:#241813;font-weight:400;line-height:1.14;margin:3px 0 4px">{{ cargaV.nombre }}</h1>
+            <div style="font-family:'Spectral',serif;font-size:14px;color:#6b6353">{{ cargaV.count }} ejemplares registrados</div>
+
+            <sc-if value="{{ cargaV.hasG }}" hint-placeholder-val="{{ false }}">
+              <div class="cg-scroll" style="display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px">
+                <sc-for list="{{ cargaV.tabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.nombre }} · {{ t.count }}</button></sc-for>
+              </div>
+            </sc-if>
+
+            <div style="display:grid;grid-template-columns:{{ cargaGridCols }};gap:20px;margin-top:18px" class="cg-carga-grid">
+              <!-- FORM -->
+              <div id="cg-carga-form" style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:18px;padding:18px 17px;align-self:start">
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:15px">
+                  <span style="width:26px;height:26px;border-radius:8px;background:#A8472A;color:#F7F2E8;display:flex;align-items:center;justify-content:center;font-size:15px;flex:none">✚</span>
+                  <span style="font-family:'Marcellus',serif;font-size:16px;color:#241813">{{ cargaFormTitle }}</span>
+                </div>
+
+                <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#A8472A;font-weight:600;margin-bottom:9px">Identificación</div>
+                <div style="display:grid;grid-template-columns:0.7fr 1.3fr;gap:9px">
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Prefijo</span><input value="{{ cargaV.f_prefijo }}" onInput="{{ cargaV.set.prefijo }}" placeholder="JCDCH" style="{{ inpSt }}"></label>
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Nombre del ejemplar *</span><input value="{{ cargaV.f_nombre }}" onInput="{{ cargaV.set.nombre }}" placeholder="Don Hidalgo" style="{{ inpSt }}"></label>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:9px">
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Sexo</span><select value="{{ cargaV.f_sex }}" onChange="{{ cargaV.set.sex }}" style="{{ inpSt }}"><option value="m">Macho</option><option value="f">Hembra</option><option value="c">Capón</option></select></label>
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Código RG</span><input value="{{ cargaV.f_codigo }}" onInput="{{ cargaV.set.codigo }}" placeholder="PN-12345" style="{{ inpSt }}"></label>
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">F. Nacimiento</span><input value="{{ cargaV.f_fechaNac }}" onInput="{{ cargaV.set.fechaNac }}" placeholder="12 Mar 2019" style="{{ inpSt }}"></label>
+                </div>
+
+                <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#A8472A;font-weight:600;margin:16px 0 9px">Genealogía</div>
+                <div style="display:grid;grid-template-columns:0.7fr 1.3fr;gap:9px">
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Padre · pref.</span><input value="{{ cargaV.f_padrePre }}" onInput="{{ cargaV.set.padrePre }}" placeholder="OSP" style="{{ inpSt }}"></label>
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Padre · nombre</span><input value="{{ cargaV.f_padreNom }}" onInput="{{ cargaV.set.padreNom }}" placeholder="Imperial" style="{{ inpSt }}"></label>
+                </div>
+                <div style="display:grid;grid-template-columns:0.7fr 1.3fr;gap:9px;margin-top:9px">
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Madre · pref.</span><input value="{{ cargaV.f_madrePre }}" onInput="{{ cargaV.set.madrePre }}" placeholder="CCC" style="{{ inpSt }}"></label>
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Madre · nombre</span><input value="{{ cargaV.f_madreNom }}" onInput="{{ cargaV.set.madreNom }}" placeholder="Estampa" style="{{ inpSt }}"></label>
+                </div>
+
+                <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#A8472A;font-weight:600;margin:16px 0 9px">Propiedad</div>
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Criador</span><input value="{{ cargaV.f_criador }}" onInput="{{ cargaV.set.criador }}" placeholder="Criadero La Viña" style="{{ inpSt }}"></label>
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Propietario</span><input value="{{ cargaV.f_propietario }}" onInput="{{ cargaV.set.propietario }}" placeholder="Familia Helguero Seminario" style="{{ inpSt }}"></label>
+                  <label style="display:flex;flex-direction:column;gap:4px"><span style="{{ lblSt }}">Microchip</span><input value="{{ cargaV.f_microchip }}" onInput="{{ cargaV.set.microchip }}" placeholder="991001001…" style="{{ inpSt }}"></label>
+                </div>
+
+                <sc-if value="{{ cargaV.msg }}" hint-placeholder-val="{{ false }}">
+                  <div style="margin-top:14px;background:#DDE9CF;border:1px solid #C7D9B3;border-radius:11px;padding:10px 12px;font-family:'Archivo',sans-serif;font-size:12.5px;color:#4B6E3C">{{ cargaV.msg }}</div>
+                </sc-if>
+
+                <div style="display:flex;gap:9px;margin-top:16px">
+                  <sc-if value="{{ cargaV.editing }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ cargaV.onCancel }}" style="height:48px;padding:0 18px;border:1px solid #E0D5BF;border-radius:12px;background:#fff;color:#6b6353;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">Cancelar</button>
+                  </sc-if>
+                  <button onClick="{{ cargaV.onSave }}" style="flex:1;height:48px;border:0;border-radius:12px;background:#A8472A;color:#F7F2E8;font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 10px 22px -12px rgba(168,71,42,.6)">{{ cargaSaveLabel }}</button>
+                </div>
+              </div>
+
+              <!-- ROSTER -->
+              <div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+                  <span style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9a8f7a;font-weight:600">Padrón · {{ cargaV.count }}</span>
+                </div>
+                <sc-if value="{{ cargaHasRows }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:7px">
+                  <sc-for list="{{ cargaV.rows }}" as="r" hint-placeholder-count="5">
+                  <div style="{{ r.editing }}">
+                    <div style="width:34px;height:34px;flex:none;border-radius:9px;background:#F1E9D7;border:1px solid #E5DBC6;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-size:12px;font-weight:700;color:#6b6353">{{ r.no }}</div>
+                    <div style="flex:1;min-width:0">
+                      <div style="font-family:'Spectral',serif;font-size:14.5px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span style="color:#A8472A;font-family:'Archivo',sans-serif;font-size:10.5px;font-weight:700;letter-spacing:.05em">{{ r.prefijo }}</span> {{ r.nombre }}</div>
+                      <div style="font-family:'Archivo',sans-serif;font-size:10.5px;color:#9a8f7a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px">{{ r.prop }}</div>
+                    </div>
+                    <button onClick="{{ r.onEdit }}" title="Editar" style="width:32px;height:32px;flex:none;border:1px solid #E0D5BF;border-radius:9px;background:#fff;color:#8c8270;font-size:13px;cursor:pointer">✎</button>
+                    <button onClick="{{ r.onDel }}" title="Eliminar" style="width:32px;height:32px;flex:none;border:1px solid #EAD6CE;border-radius:9px;background:#F7ECE7;color:#A8472A;font-size:15px;cursor:pointer">×</button>
+                  </div>
+                  </sc-for>
+                </div>
+                </sc-if>
+                <sc-if value="{{ cargaEmpty }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:2px dashed #E0D5BF;border-radius:16px;padding:32px 18px;text-align:center;background:#FBF7EF">
+                    <div style="font-size:26px;opacity:.4">☰</div>
+                    <div style="font-family:'Spectral',serif;font-size:14.5px;color:#6b6353;margin-top:6px">Aún no hay ejemplares en esta categoría.</div>
+                    <div style="font-family:'Archivo',sans-serif;font-size:12px;color:#9a8f7a;margin-top:3px">Complétalos con el formulario o importa desde Excel.</div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+          </sc-if>
+          </sc-if>
+
+          <!-- ========== ⑩ INGRESO DE RESULTADOS ========== -->
+          <sc-if value="{{ isResultados }}" hint-placeholder-val="{{ false }}">
+            <sc-if value="{{ resCatPicked }}" hint-placeholder-val="{{ false }}">
+            <div style="max-width:680px;margin:0 auto;padding:18px clamp(16px,4%,40px) 120px;position:relative">
+              <button onClick="{{ go.dashboard }}" style="background:transparent;border:0;color:#8c8270;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0">‹ Categorías</button>
+              <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;margin-bottom:6px">
+                <div style="flex:1;min-width:180px"><div style="font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#A8472A;font-weight:600">{{ resV.grupo }}</div><h1 style="font-family:'Marcellus',serif;font-size:clamp(20px,3.2vw,27px);color:#241813;font-weight:400;line-height:1.12;margin-top:3px">{{ resV.nombre }}</h1></div>
+                <span style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;background:{{ resV.em.bg }};color:{{ resV.em.color }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ resV.em.dot }}"></span>{{ resV.em.label }}</span>
+              </div>
+
+              <sc-if value="{{ resV.hasG }}" hint-placeholder-val="{{ false }}">
+                <div class="cg-scroll" style="display:flex;gap:8px;overflow-x:auto;padding:10px 0 6px">
+                  <sc-for list="{{ resV.tabs }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.onClick }}" style="{{ t.style }}">{{ t.nombre }}</button></sc-for>
+                </div>
+              </sc-if>
+
+              <div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9a8f7a;margin:14px 0 10px">Toca la posición de cada ejemplar. Se guarda automáticamente.</div>
+
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <sc-for list="{{ resV.rows }}" as="r" hint-placeholder-count="6">
+                <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:16px;padding:13px 13px 14px">
+                  <div style="display:flex;align-items:center;gap:11px;margin-bottom:11px">
+                    <div style="width:38px;height:38px;flex:none;border-radius:10px;background:#F1E9D7;border:1px solid #E5DBC6;display:flex;align-items:center;justify-content:center;font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;color:#6b6353">{{ r.no }}</div>
+                    <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.nombre }}</div><div style="font-family:'Archivo',sans-serif;font-size:11px;color:#9a8f7a">Cancha {{ r.cancha }}</div></div>
+                  </div>
+                  <div style="display:flex;gap:8px">
+                    <button onClick="{{ r.set1 }}" style="{{ r.b1 }}">1.º</button>
+                    <button onClick="{{ r.set2 }}" style="{{ r.b2 }}">2.º</button>
+                    <button onClick="{{ r.set3 }}" style="{{ r.b3 }}">3.º</button>
+                    <button onClick="{{ r.setNone }}" style="{{ r.bN }}">—</button>
+                  </div>
+                </div>
+                </sc-for>
+              </div>
+
+              <!-- sticky action bar -->
+              <div style="position:absolute;left:0;right:0;bottom:0;background:linear-gradient(180deg,rgba(247,242,232,0),#F7F2E8 32%);padding:24px clamp(16px,4%,40px) 18px;display:flex;gap:10px">
+                <button style="flex:1;height:54px;border:1px solid #C7D9B3;border-radius:14px;background:#DDE9CF;color:#4B6E3C;font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;cursor:pointer">✓ Finalizar categoría</button>
+                <button style="flex:1.3;height:54px;border:0;border-radius:14px;background:#A8472A;color:#F7F2E8;font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 10px 24px -10px rgba(168,71,42,.6)">Guardar y publicar</button>
+              </div>
+            </div>
+            </sc-if>
+
+            <sc-if value="{{ noResCat }}" hint-placeholder-val="{{ true }}">
+            <div style="max-width:680px;margin:0 auto;padding:22px clamp(16px,4%,40px) 48px">
+              <h1 style="font-family:'Marcellus',serif;font-size:clamp(23px,3.4vw,30px);color:#241813;font-weight:400;margin-bottom:5px">Ingreso de resultados</h1>
+              <p style="font-family:'Spectral',serif;font-size:14.5px;color:#6b6353;margin-bottom:18px">Elige la categoría que se está corriendo en pista.</p>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ dashCats }}" as="c" hint-placeholder-count="8">
+                <div onClick="{{ c.onManage }}" style="display:flex;align-items:center;gap:12px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:14px;padding:14px 15px;cursor:pointer" style-hover="background:#fff">
+                  <span style="width:10px;height:10px;flex:none;border-radius:50%;background:{{ c.em.dot }}"></span>
+                  <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:15.5px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.nombre }}</div><div style="font-family:'Archivo',sans-serif;font-size:11px;color:#9a8f7a">{{ c.count }} ejemplares</div></div>
+                  <span style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:600;color:{{ c.em.color }};white-space:nowrap">{{ c.em.label }}</span>
+                </div>
+                </sc-for>
+              </div>
+            </div>
+            </sc-if>
+          </sc-if>
+
+          <!-- ========== ⑪ GENERADOR DE QR ========== -->
+          <sc-if value="{{ isQR }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:560px;margin:0 auto;padding:24px clamp(18px,5%,56px) 48px">
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#A8472A;font-weight:600">Acceso del público</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(24px,3.6vw,32px);color:#241813;font-weight:400;margin:5px 0 18px">Código QR del concurso</h1>
+
+            <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:20px;padding:24px;text-align:center">
+              <div style="display:inline-block;background:#fff;padding:18px;border-radius:16px;box-shadow:0 12px 30px -16px rgba(60,45,25,.45)">
+                <div style="display:grid;grid-template-columns:repeat(25,1fr);width:min(232px,62vw);aspect-ratio:1;gap:0">
+                  <sc-for list="{{ qrCells }}" as="cell" hint-placeholder-count="40"><div style="width:100%;aspect-ratio:1;background:{{ cell.bg }}"></div></sc-for>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-top:18px">
+                <div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(140deg,#2f2a22,#4a4234);display:flex;align-items:center;justify-content:center;color:#e9d8b8;font-family:'Marcellus',serif;font-size:14px">P</div>
+                <div style="text-align:left"><div style="font-family:'Archivo',sans-serif;font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:#A8472A;font-weight:600">A.C.P.C.P. Piura</div><div style="font-family:'Spectral',serif;font-size:14px;font-weight:600;color:#2A2118">LXXIX Concurso Nacional · 2026</div></div>
+              </div>
+              <div style="margin-top:14px;display:inline-flex;align-items:center;gap:7px;background:#EFE7D4;border-radius:30px;padding:7px 14px;font-family:'Archivo',sans-serif;font-size:12.5px;color:#5C5347">🔗 {{ qrUrl }}</div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px">
+              <button style="height:50px;border:1px solid #E0D5BF;border-radius:13px;background:#FBF7EF;color:#2A2118;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">⤓ Descargar PNG</button>
+              <button style="height:50px;border:0;border-radius:13px;background:#A8472A;color:#F7F2E8;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">⎙ Imprimir cartel</button>
+            </div>
+            <div style="background:#D9E8F1;border:1px solid #BBD5E5;border-radius:13px;padding:14px;margin-top:13px;font-family:'Spectral',serif;font-size:13.5px;color:#2E6486;line-height:1.5">Coloca este código en la entrada del coliseo. Cada asociación genera el suyo: el público escanea y entra directo al catálogo, sin instalar nada ni iniciar sesión.</div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑫ CENTRAL · LOGIN ========== -->
+          <sc-if value="{{ isSLogin }}" hint-placeholder-val="{{ false }}">
+          <div style="min-height:760px;background:radial-gradient(120% 90% at 50% -10%,#2a2418 0%,#17140F 62%);display:flex;align-items:center;justify-content:center;padding:30px 20px">
+            <div style="width:100%;max-width:430px;background:#F7F2E8;border-radius:20px;padding:28px clamp(20px,5%,32px);box-shadow:0 30px 70px -30px rgba(0,0,0,.7)">
+              <div style="display:flex;align-items:center;gap:11px;margin-bottom:6px">
+                <div style="width:44px;height:44px;border-radius:12px;background:linear-gradient(140deg,#DFB964,#8A6A28);display:flex;align-items:center;justify-content:center;color:#1a140a;font-family:'Marcellus',serif;font-size:20px">C</div>
+                <div><div style="font-family:'Marcellus',serif;font-size:18px;color:#241813">CanchaGo Central</div><div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9A6A12;font-weight:600">Operaciones de plataforma</div></div>
+              </div>
+              <h1 style="font-family:'Marcellus',serif;font-size:25px;color:#241813;font-weight:400;margin:18px 0 4px">Acceso restringido</h1>
+              <p style="font-family:'Spectral',serif;font-size:14px;color:#6b6353;margin-bottom:18px">Panel para el equipo CanchaGo. Administra todas las asociaciones, sus concursos y usuarios.</p>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <input placeholder="Correo corporativo" value="diego@canchago.pe" style="height:48px;border:1px solid #E0D5BF;border-radius:12px;background:#FBF7EF;padding:0 15px;font-family:'Spectral',serif;font-size:15px;color:#2A2118;outline:none" />
+                <input type="password" value="········" style="height:48px;border:1px solid #E0D5BF;border-radius:12px;background:#FBF7EF;padding:0 15px;font-family:'Spectral',serif;font-size:15px;color:#2A2118;outline:none" />
+                <label style="display:flex;align-items:center;gap:9px;font-family:'Archivo',sans-serif;font-size:12.5px;color:#6b6353;margin-top:2px"><span style="width:16px;height:16px;border-radius:5px;border:1.5px solid #C9A24B;background:#F3E7C8;display:inline-flex;align-items:center;justify-content:center;color:#8A6A28;font-size:11px">✓</span>Verificación en dos pasos activa</label>
+              </div>
+              <button onClick="{{ doSLogin }}" style="width:100%;height:52px;margin-top:16px;border:0;border-radius:13px;background:linear-gradient(135deg,#3a3226,#211d16);color:#F2E9D6;font-family:'Archivo',sans-serif;font-size:15px;font-weight:600;letter-spacing:.02em;cursor:pointer;box-shadow:0 10px 24px -10px rgba(0,0,0,.5)">Entrar a Central</button>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑬ CENTRAL · RESUMEN GLOBAL ========== -->
+          <sc-if value="{{ isSDash }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:1080px;margin:0 auto;padding:22px clamp(18px,5%,56px) 48px">
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9A6A12;font-weight:600">Vista de plataforma</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(24px,3.6vw,34px);color:#241813;font-weight:400;margin:5px 0 18px">Resumen global</h1>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px">
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:34px;color:#2A2118">{{ sStats.nAsoc }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270">asociaciones · {{ sStats.sActivos }} activas</div></div>
+              <div style="background:#D9E8F1;border:1px solid #BBD5E5;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:34px;color:#2E6486">{{ sStats.sConcCur }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#2E6486">concursos en curso</div></div>
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:34px;color:#2A2118">{{ sStats.sEjem }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270">ejemplares registrados</div></div>
+              <div style="background:#F3E7C8;border:1px solid #E4D2A1;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:34px;color:#9A6A12">{{ sStats.sScans }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#9A6A12">escaneos QR (mes)</div></div>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:26px 0 11px"><h2 style="font-family:'Marcellus',serif;font-size:19px;color:#5C5347;font-weight:400">Concursos en curso ahora</h2><button onClick="{{ go.sasoc }}" style="background:transparent;border:0;color:#A8472A;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Todas las asociaciones ›</button></div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+              <sc-for list="{{ sConcursosCur }}" as="c" hint-placeholder-count="2">
+              <div onClick="{{ c.onOpen }}" style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:16px;cursor:pointer" style-hover="background:#fff">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#A8472A;font-weight:600">{{ c.asoc }}</span><span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:10.5px;font-weight:600;background:{{ c.em.bg }};color:{{ c.em.color }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ c.em.dot }};animation:cgPulse 1.6s infinite"></span>{{ c.em.label }}</span></div>
+                <div style="font-family:'Spectral',serif;font-size:16px;font-weight:600;color:#2A2118;line-height:1.22;margin:10px 0 12px;text-wrap:pretty">{{ c.nombre }}</div>
+                <div style="display:flex;align-items:center;gap:16px;border-top:1px solid #EFE7D4;padding-top:11px;font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270"><span>{{ c.cats }} categorías</span><span>{{ c.ejem }} ejemplares</span></div>
+              </div>
+              </sc-for>
+            </div>
+
+            <div style="display:flex;align-items:center;justify-content:space-between;margin:26px 0 11px"><h2 style="font-family:'Marcellus',serif;font-size:19px;color:#5C5347;font-weight:400">Asociaciones</h2></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ asocList }}" as="a" hint-placeholder-count="6">
+              <div onClick="{{ a.onOpen }}" style="display:flex;align-items:center;gap:13px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:13px;padding:12px 14px;cursor:pointer" style-hover="background:#fff">
+                <div style="width:40px;height:40px;flex:none;border-radius:10px;background:linear-gradient(140deg,#2f2a22,#4a4234);display:flex;align-items:center;justify-content:center;color:#e9d8b8;font-family:'Marcellus',serif;font-size:16px">{{ a.inicial }}</div>
+                <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:15px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.corta }}</div><div style="font-family:'Archivo',sans-serif;font-size:11px;color:#9a8f7a">{{ a.region }} · {{ a.nConc }} concursos · {{ a.nAdmins }} admins</div></div>
+                <span style="{{ a.badgeStyle }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ a.em.dot }}"></span>{{ a.em.label }}</span>
+                <span style="color:#cbbfa6;font-size:17px">›</span>
+              </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑭ CENTRAL · ASOCIACIONES ========== -->
+          <sc-if value="{{ isSAsoc }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:1080px;margin:0 auto;padding:22px clamp(18px,5%,56px) 48px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:16px">
+              <div><div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9A6A12;font-weight:600">Directorio</div><h1 style="font-family:'Marcellus',serif;font-size:clamp(24px,3.6vw,32px);color:#241813;font-weight:400;margin-top:4px">Asociaciones</h1></div>
+              <button onClick="{{ startNuevaAsoc }}" style="height:46px;padding:0 18px;border:0;border-radius:12px;background:linear-gradient(135deg,#3a3226,#211d16);color:#F2E9D6;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">＋ Nueva asociación</button>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:7px;background:#fff;border:1px solid #E0D5BF;border-radius:13px;padding:5px 6px;margin-bottom:18px">
+              <span style="font-size:17px;color:#A8472A;padding-left:9px">⌕</span>
+              <input value="{{ asocQuery }}" onInput="{{ setAsocQuery }}" placeholder="Buscar por nombre o región…" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-family:'Spectral',serif;font-size:15px;color:#2A2118;padding:8px 4px" />
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px">
+              <sc-for list="{{ asocList }}" as="a" hint-placeholder-count="6">
+              <div onClick="{{ a.onOpen }}" style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:16px;padding:17px;cursor:pointer;display:flex;flex-direction:column" style-hover="transform:translateY(-3px);box-shadow:0 16px 30px -20px rgba(60,45,25,.5)">
+                <div style="display:flex;align-items:flex-start;gap:12px">
+                  <div style="width:46px;height:46px;flex:none;border-radius:11px;background:linear-gradient(140deg,#2f2a22,#4a4234);display:flex;align-items:center;justify-content:center;color:#e9d8b8;font-family:'Marcellus',serif;font-size:18px">{{ a.inicial }}</div>
+                  <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:15.5px;font-weight:600;color:#2A2118;line-height:1.2;text-wrap:pretty">{{ a.corta }}</div><div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9a8f7a;margin-top:2px">{{ a.region }}</div></div>
+                  <span style="{{ a.badgeStyle }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ a.em.dot }}"></span>{{ a.em.label }}</span>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:14px"><span style="{{ a.planStyle }}">{{ a.plan }}</span><span style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#8c8270">Plan de suscripción</span></div>
+                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;border-top:1px solid #EFE7D4;margin-top:14px;padding-top:13px">
+                  <div><div style="font-family:'Marcellus',serif;font-size:20px;color:#2A2118">{{ a.nConc }}</div><div style="font-family:'Archivo',sans-serif;font-size:10.5px;color:#9a8f7a">concursos</div></div>
+                  <div><div style="font-family:'Marcellus',serif;font-size:20px;color:#2A2118">{{ a.nAdmins }}</div><div style="font-family:'Archivo',sans-serif;font-size:10.5px;color:#9a8f7a">admins</div></div>
+                  <div><div style="font-family:'Marcellus',serif;font-size:20px;color:#2A2118">{{ a.scans }}</div><div style="font-family:'Archivo',sans-serif;font-size:10.5px;color:#9a8f7a">escaneos</div></div>
+                </div>
+              </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑮ CENTRAL · DETALLE ASOCIACIÓN ========== -->
+          <sc-if value="{{ isSAsocDet }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:960px;margin:0 auto;padding:18px clamp(18px,5%,56px) 48px">
+            <button onClick="{{ go.sasoc }}" style="background:transparent;border:0;color:#8c8270;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0;margin-bottom:6px">‹ Asociaciones</button>
+
+            <div style="background:linear-gradient(160deg,#2f2a22,#473d2d);border-radius:18px;padding:22px clamp(18px,4%,26px);color:#EDE4D2;display:flex;align-items:flex-start;gap:16px;flex-wrap:wrap">
+              <div style="width:56px;height:56px;flex:none;border-radius:13px;background:linear-gradient(140deg,#DFB964,#8A6A28);display:flex;align-items:center;justify-content:center;color:#1a140a;font-family:'Marcellus',serif;font-size:24px">{{ asocDet.inicial }}</div>
+              <div style="flex:1;min-width:200px">
+                <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#caa37d;font-weight:600">{{ asocDet.region }}</div>
+                <h1 style="font-family:'Marcellus',serif;font-size:clamp(20px,3vw,27px);font-weight:400;color:#FBF4E3;line-height:1.12;margin-top:3px">{{ asocDet.nombre }}</h1>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:11px;flex-wrap:wrap"><span style="{{ asocDet.planStyle }}">{{ asocDet.plan }}</span><span style="{{ asocDet.badgeStyle }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ asocDet.em.dot }}"></span>{{ asocDet.em.label }}</span></div>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-wrap:wrap;gap:9px;margin-top:14px">
+              <button onClick="{{ asocDet.onEnter }}" style="height:46px;padding:0 18px;border:0;border-radius:12px;background:#A8472A;color:#F7F2E8;font-family:'Archivo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 10px 22px -12px rgba(168,71,42,.6)">↪ Entrar al panel de la asociación</button>
+              <button onClick="{{ asocDet.onEdit }}" style="height:46px;padding:0 16px;border:1px solid #E0D5BF;border-radius:12px;background:#FBF7EF;color:#2A2118;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer">Editar datos y acceso</button>
+              <button onClick="{{ asocDet.onToggle }}" style="{{ asocToggleStyle }}">{{ asocToggleLabel }}</button>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:10px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:14px;padding:13px 15px;margin-top:12px;flex-wrap:wrap">
+              <span style="font-size:16px;color:#9A6A12">🔑</span>
+              <div style="flex:1;min-width:0"><div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9a8f7a;font-weight:600">Acceso del administrador</div><div style="font-family:'Spectral',serif;font-size:14px;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ asocDet.user }} · <span style="letter-spacing:.1em;color:#8c8270">{{ asocDet.pass }}</span></div></div>
+              <button onClick="{{ asocDet.onEdit }}" style="height:34px;padding:0 13px;border:1px solid #E0D5BF;border-radius:9px;background:#fff;color:#5C5347;font-family:'Archivo',sans-serif;font-size:11.5px;font-weight:600;cursor:pointer">Cambiar</button>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-top:13px">
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:15px"><div style="font-family:'Marcellus',serif;font-size:28px;color:#2A2118">{{ asocDet.nConc }}</div><div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#8c8270">concursos</div></div>
+              <div style="background:#D9E8F1;border:1px solid #BBD5E5;border-radius:15px;padding:15px"><div style="font-family:'Marcellus',serif;font-size:28px;color:#2E6486">{{ asocDet.concCur }}</div><div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#2E6486">en curso</div></div>
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:15px"><div style="font-family:'Marcellus',serif;font-size:28px;color:#2A2118">{{ asocDet.ejem }}</div><div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#8c8270">ejemplares</div></div>
+              <div style="background:#F3E7C8;border:1px solid #E4D2A1;border-radius:15px;padding:15px"><div style="font-family:'Marcellus',serif;font-size:28px;color:#9A6A12">{{ asocDet.scans }}</div><div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9A6A12">escaneos QR</div></div>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;margin:24px 0 11px"><h2 style="font-family:'Marcellus',serif;font-size:18px;color:#5C5347;font-weight:400;white-space:nowrap">Concursos</h2><span style="flex:1;height:1px;background:#E3D9C6"></span></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ asocDet.concursos }}" as="c" hint-placeholder-count="3">
+              <div onClick="{{ c.onOpen }}" style="display:flex;align-items:center;gap:12px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:13px;padding:12px 14px;cursor:pointer" style-hover="background:#fff">
+                <span style="width:9px;height:9px;flex:none;border-radius:50%;background:{{ c.em.dot }}"></span>
+                <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:15px;font-weight:600;color:#2A2118;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.nombre }}</div><div style="font-family:'Archivo',sans-serif;font-size:11px;color:#9a8f7a">{{ c.fechas }} · {{ c.cats }} categorías · {{ c.ejem }} ejemplares</div></div>
+                <span style="font-family:'Archivo',sans-serif;font-size:11px;font-weight:600;color:{{ c.em.color }};white-space:nowrap">{{ c.em.label }}</span>
+                <span style="color:#cbbfa6;font-size:17px">›</span>
+              </div>
+              </sc-for>
+            </div>
+
+            <div style="display:flex;align-items:center;gap:12px;margin:24px 0 11px"><h2 style="font-family:'Marcellus',serif;font-size:18px;color:#5C5347;font-weight:400;white-space:nowrap">Administradores</h2><span style="flex:1;height:1px;background:#E3D9C6"></span><button style="height:34px;padding:0 14px;border:1px solid #E0D5BF;border-radius:9px;background:#FBF7EF;color:#2A2118;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;cursor:pointer">+ Invitar</button></div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ asocDet.admins }}" as="u" hint-placeholder-count="2">
+              <div style="display:flex;align-items:center;gap:12px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:13px;padding:12px 14px">
+                <div style="width:38px;height:38px;flex:none;border-radius:50%;background:#EFE7D4;display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:15px;color:#6b6353">{{ u.inicial }}</div>
+                <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:15px;font-weight:600;color:#2A2118">{{ u.nombre }}</div><div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9a8f7a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.email }}</div></div>
+                <span style="font-family:'Archivo',sans-serif;font-size:11px;color:#8c8270;white-space:nowrap">{{ u.rol }}</span>
+                <span style="font-family:'Archivo',sans-serif;font-size:11px;color:#bdb298;white-space:nowrap">{{ u.ult }}</span>
+              </div>
+              </sc-for>
+            </div>
+
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑭b CENTRAL · NUEVA / EDITAR ASOCIACIÓN ========== -->
+          <sc-if value="{{ isNuevaAsoc }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:620px;margin:0 auto;padding:18px clamp(16px,4%,40px) 48px">
+            <button onClick="{{ go.sasoc }}" style="background:transparent;border:0;color:#8c8270;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0">‹ Asociaciones</button>
+            <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#9A6A12;font-weight:600;margin-top:4px">CanchaGo Central</div>
+            <h1 style="font-family:'Marcellus',serif;font-size:clamp(23px,3.4vw,30px);color:#241813;font-weight:400;margin:4px 0 6px">{{ asocFormTitle }}</h1>
+            <p style="font-family:'Spectral',serif;font-size:14px;font-style:italic;color:#6b6353;margin-bottom:20px">Registra la asociación y crea el acceso de su administrador. Con ese usuario y contraseña entrará a gestionar sus propios concursos.</p>
+
+            <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:13px">
+              <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A6A12;font-weight:600">Datos de la asociación</div>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Nombre completo *</span><input value="{{ asocFormView.nombre }}" onInput="{{ asocFormView.set.nombre }}" placeholder="Asoc. de Criadores y Prop. de Caballos de Paso de…" style="{{ inpSt }}"></label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Sigla / nombre corto *</span><input value="{{ asocFormView.corta }}" onInput="{{ asocFormView.set.corta }}" placeholder="A.C.C.P. — Cusco" style="{{ inpSt }}"></label>
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Región</span><input value="{{ asocFormView.region }}" onInput="{{ asocFormView.set.region }}" placeholder="Cusco" style="{{ inpSt }}"></label>
+              </div>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Plan de suscripción</span><select value="{{ asocFormView.plan }}" onChange="{{ asocFormView.set.plan }}" style="{{ inpSt }}"><option>Regional</option><option>Nacional</option></select></label>
+
+              <div style="font-family:'Archivo',sans-serif;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#9A6A12;font-weight:600;margin-top:6px">Acceso del administrador</div>
+              <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Correo del administrador</span><input value="{{ asocFormView.email }}" onInput="{{ asocFormView.set.email }}" placeholder="admin@asociacion.pe" style="{{ inpSt }}"></label>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px">
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Usuario *</span><input value="{{ asocFormView.user }}" onInput="{{ asocFormView.set.user }}" placeholder="admin@asociacion.pe" style="{{ inpSt }}"></label>
+                <label style="display:flex;flex-direction:column;gap:5px"><span style="{{ lblSt }}">Contraseña *</span><input value="{{ asocFormView.pass }}" onInput="{{ asocFormView.set.pass }}" placeholder="Contraseña temporal" style="{{ inpSt }}"></label>
+              </div>
+              <sc-if value="{{ asocFormView.msg }}" hint-placeholder-val="{{ false }}"><div style="background:#F3DCD3;border:1px solid #E4C4B8;border-radius:11px;padding:10px 12px;font-family:'Archivo',sans-serif;font-size:12.5px;color:#8A3B24">{{ asocFormView.msg }}</div></sc-if>
+              <button onClick="{{ asocFormView.onSave }}" style="height:50px;border:0;border-radius:12px;background:linear-gradient(135deg,#3a3226,#211d16);color:#F2E9D6;font-family:'Archivo',sans-serif;font-size:14px;font-weight:700;cursor:pointer">{{ asocSaveLabel }}</button>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑯ CENTRAL · USUARIOS ========== -->
+          <sc-if value="{{ isSUsers }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:1080px;margin:0 auto;padding:22px clamp(18px,5%,56px) 48px">
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px">
+              <div><div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#9A6A12;font-weight:600">Cuentas de la plataforma</div><h1 style="font-family:'Marcellus',serif;font-size:clamp(24px,3.6vw,32px);color:#241813;font-weight:400;margin-top:4px">Usuarios</h1></div>
+              <button style="height:46px;padding:0 18px;border:0;border-radius:12px;background:linear-gradient(135deg,#3a3226,#211d16);color:#F2E9D6;font-family:'Archivo',sans-serif;font-size:13.5px;font-weight:600;cursor:pointer">+ Invitar usuario</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ superUsers }}" as="u" hint-placeholder-count="6">
+              <div style="display:flex;align-items:center;gap:13px;background:#FBF7EF;border:1px solid #EAE0CC;border-radius:13px;padding:12px 14px">
+                <div style="position:relative;flex:none"><div style="width:40px;height:40px;border-radius:50%;background:#EFE7D4;display:flex;align-items:center;justify-content:center;font-family:'Marcellus',serif;font-size:16px;color:#6b6353">{{ u.inicial }}</div><sc-if value="{{ u.online }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;border-radius:50%;background:#5C8347;border:2px solid #FBF7EF"></span></sc-if></div>
+                <div style="flex:1;min-width:0"><div style="font-family:'Spectral',serif;font-size:15px;font-weight:600;color:#2A2118">{{ u.nombre }}</div><div style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#9a8f7a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ u.email }}</div></div>
+                <span style="font-family:'Archivo',sans-serif;font-size:11.5px;color:#8c8270;white-space:nowrap;min-width:0;overflow:hidden;text-overflow:ellipsis;max-width:140px">{{ u.asoc }}</span>
+                <span style="{{ u.rolStyle }}">{{ u.rol }}</span>
+                <span style="font-family:'Archivo',sans-serif;font-size:11px;color:#bdb298;white-space:nowrap">{{ u.ult }}</span>
+              </div>
+              </sc-for>
+            </div>
+          </div>
+          </sc-if>
+
+          <!-- ========== ⑰ CENTRAL · MONITOR DE CONCURSO ========== -->
+          <sc-if value="{{ isSConc }}" hint-placeholder-val="{{ false }}">
+          <div style="max-width:880px;margin:0 auto;padding:18px clamp(18px,5%,56px) 48px">
+            <button onClick="{{ sConc.onAsoc }}" style="background:transparent;border:0;color:#8c8270;font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;cursor:pointer;padding:6px 0;margin-bottom:6px">‹ {{ sConc.asoc }}</button>
+
+            <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">
+              <div style="flex:1;min-width:200px">
+                <div style="font-family:'Archivo',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9A6A12;font-weight:600">{{ sConc.asoc }} · {{ sConc.region }}</div>
+                <h1 style="font-family:'Marcellus',serif;font-size:clamp(22px,3.4vw,32px);color:#241813;font-weight:400;line-height:1.1;margin-top:5px">{{ sConc.nombre }}</h1>
+                <div style="font-family:'Spectral',serif;font-style:italic;font-size:14.5px;color:#6b6353;margin-top:6px">{{ sConc.fechas }}</div>
+              </div>
+              <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:30px;font-family:'Archivo',sans-serif;font-size:12px;font-weight:600;background:{{ sConc.em.bg }};color:{{ sConc.em.color }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ sConc.em.dot }}"></span>{{ sConc.em.label }}</span>
+            </div>
+
+            <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:17px;margin-top:18px">
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px"><span style="font-family:'Archivo',sans-serif;font-size:12.5px;font-weight:600;color:#5C5347">Categorías finalizadas</span><span style="font-family:'Marcellus',serif;font-size:18px;color:#A8472A">{{ sConc.pct }}%</span></div>
+              <div style="height:11px;border-radius:20px;background:#EFE7D4;overflow:hidden"><div style="height:100%;width:{{ sConc.pct }}%;background:linear-gradient(90deg,#5C8347,#4B6E3C);border-radius:20px;transition:width .5s"></div></div>
+              <div style="display:flex;gap:18px;margin-top:11px;font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270"><span>{{ sConc.done }} cerradas</span><span>{{ sConc.pend }} pendientes</span></div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:13px">
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:30px;color:#2A2118">{{ sConc.cats }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270">categorías</div></div>
+              <div style="background:#FBF7EF;border:1px solid #EAE0CC;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:30px;color:#2A2118">{{ sConc.ejem }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#8c8270">ejemplares</div></div>
+              <div style="background:#F3E7C8;border:1px solid #E4D2A1;border-radius:15px;padding:16px"><div style="font-family:'Marcellus',serif;font-size:30px;color:#9A6A12">{{ sConc.scans }}</div><div style="font-family:'Archivo',sans-serif;font-size:12px;color:#9A6A12">escaneos QR</div></div>
+            </div>
+
+            <div style="background:#D9E8F1;border:1px solid #BBD5E5;border-radius:13px;padding:14px;margin-top:18px;font-family:'Spectral',serif;font-size:13.5px;color:#2E6486;line-height:1.5">Vista de monitoreo de Central. La carga del catálogo y el ingreso de resultados los realiza el administrador de la asociación desde su propio panel.</div>
+          </div>
+          </sc-if>
+
+          </div>
+
+          <!-- ===== BOTTOM NAV (usuario) ===== -->
+          <sc-if value="{{ isUserView }}" hint-placeholder-val="{{ true }}">
+          <div style="position:sticky;bottom:0;z-index:45;background:rgba(247,242,232,.96);backdrop-filter:blur(12px);border-top:1px solid #E3D9C6;display:flex;gap:2px;padding:7px 8px 9px">
+            <button onClick="{{ go.landing }}" style="{{ nbInicio }}"><span style="font-size:19px;line-height:1">⌂</span><span>Inicio</span></button>
+            <button onClick="{{ go.categorias }}" style="{{ nbCat }}"><span style="font-size:16px;line-height:1">▦</span><span>Categorías</span></button>
+            <button onClick="{{ go.busqueda }}" style="{{ nbBuscar }}"><span style="font-size:19px;line-height:1">⌕</span><span>Buscar</span></button>
+          </div>
+          </sc-if>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = {
+    role: 'user',
+    screen: 'landing',
+    bp: 'mobile',
+    catId: null, grupoIdx: 0, ejId: null,
+    filterEstado: 'todas', catQuery: '',
+    query: '',
+    adminLogged: false, tenantSel: 'piura',
+    activeConcId: 'c-lxxix', adminAsocId: 'piura', impersonating: false,
+    concForm: { nombre:'', anio:'2026', sede:'', fechas:'' }, concMsg:'', editConcId:null,
+    newCat: { grupo:'Capones', modalidad:'Freno y Espuelas', edad:'4 a 10 años', grupos:'Sin grupos' }, catMsg:'',
+    resCatId: null, resGrupo: 0,
+    landingVariant: 'a',
+    bump: 0,
+    superLogged: false, selAsoc: 'piura', selConc: 0, asocQuery: '',
+    asocForm: { nombre:'', corta:'', region:'', plan:'Regional', email:'', user:'', pass:'' }, asocMsg:'', editAsocId:null,
+    nowTick: 0,
+    cargaCatId: null, cargaGrupo: 0, editEjId: null,
+    form: { prefijo:'', nombre:'', sex:'m', codigo:'', fechaNac:'', padrePre:'', padreNom:'', madrePre:'', madreNom:'', criador:'', propietario:'', microchip:'' },
+    cargaMsg: '',
+  };
+
+  emptyForm(){ return { prefijo:'', nombre:'', sex:'m', codigo:'', fechaNac:'', padrePre:'', padreNom:'', madrePre:'', madreNom:'', criador:'', propietario:'', microchip:'' }; }
+  setForm = (field) => (e) => { const v=e.target.value; this.setState(s=>({ form:Object.assign({}, s.form, { [field]:v }) })); };
+  _cargaTarget(){
+    const c=this.activeConc().byId[this.state.cargaCatId]; if(!c) return null;
+    if(c.grupos){ const gi=Math.min(this.state.cargaGrupo, c.grupos.length-1); return { c, list:c.grupos[gi].ejemplares, gi }; }
+    return { c, list:c.ejemplares, gi:null };
+  }
+  _nextNo(){ let m=100; this.activeConc().all.forEach(e=>{ if(e.no>m) m=e.no; }); return m+1; }
+  _reindex(){
+    const cat=this.activeConc(); cat.byId={}; cat.all=[];
+    cat.grupos.forEach(g=>g.cats.forEach(c=>{
+      cat.byId[c.id]=c;
+      c.count = c.grupos ? c.grupos.reduce((s,x)=>s+x.ejemplares.length,0) : c.ejemplares.length;
+      (c.grupos? c.grupos.flatMap(x=>x.ejemplares): c.ejemplares).forEach(e=>{ e.catId=c.id; e.catNombre=c.nombre; cat.byId[e.id]=e; cat.all.push(e); });
+    }));
+  }
+  startCargaCat = (id) => this.nav('cargacat', { cargaCatId:id, cargaGrupo:0, editEjId:null, form:this.emptyForm(), cargaMsg:'' });
+  setCargaGrupo = (i) => this.setState({ cargaGrupo:i, editEjId:null, form:this.emptyForm() });
+  editEjemplar = (id) => {
+    const e=this.activeConc().byId[id]; if(!e) return;
+    this.setState({ editEjId:id, cargaMsg:'', form:{ prefijo:e.prefijo||'', nombre:e.nombre||'', sex:e.sex||'m', codigo:e.codigo||'', fechaNac:e.fechaNac||'', padrePre:e.padre?e.padre.prefijo:'', padreNom:e.padre?e.padre.nombre:'', madrePre:e.madre?e.madre.prefijo:'', madreNom:e.madre?e.madre.nombre:'', criador:e.criador||'', propietario:e.propietario||'', microchip:e.microchip||'' } });
+    try{ const el=document.getElementById('cg-carga-form'); }catch(_){}
+  };
+  cancelEdit = () => this.setState({ editEjId:null, form:this.emptyForm(), cargaMsg:'' });
+  delEjemplar = (id) => {
+    const t=this._cargaTarget(); if(!t) return;
+    const i=t.list.findIndex(e=>e.id===id); if(i>=0) t.list.splice(i,1);
+    this._reindex();
+    this.setState(s=>({ bump:s.bump+1, editEjId: s.editEjId===id?null:s.editEjId, form: s.editEjId===id?this.emptyForm():s.form }));
+  };
+  saveEjemplar = () => {
+    const f=this.state.form;
+    if(!f.nombre.trim()){ this.setState({ cargaMsg:'Falta el nombre del ejemplar.' }); return; }
+    const t=this._cargaTarget(); if(!t) return;
+    const payload = {
+      prefijo:(f.prefijo||'').trim().toUpperCase(), nombre:f.nombre.trim(), sex:f.sex,
+      codigo:(f.codigo||'').trim(), fechaNac:(f.fechaNac||'').trim(),
+      padre:{ prefijo:(f.padrePre||'').trim().toUpperCase(), nombre:(f.padreNom||'').trim() },
+      madre:{ prefijo:(f.madrePre||'').trim().toUpperCase(), nombre:(f.madreNom||'').trim() },
+      criador:(f.criador||'').trim(), propietario:(f.propietario||'').trim(), microchip:(f.microchip||'').trim(),
+    };
+    if(this.state.editEjId){
+      Object.assign(this.activeConc().byId[this.state.editEjId], payload);
+      this._reindex();
+      this.setState(s=>({ bump:s.bump+1, editEjId:null, form:this.emptyForm(), cargaMsg:'Ejemplar actualizado.' }));
+    } else {
+      const n=this._nextNo();
+      const ej=Object.assign({ id:'e'+n, no:n, cancha:null, resultado:null }, payload);
+      t.list.push(ej);
+      this._reindex();
+      this.setState(s=>({ bump:s.bump+1, form:this.emptyForm(), cargaMsg:'"'+payload.nombre+'" agregado al padrón.' }));
+    }
+  };
+
+  relTime(ts){
+    const sec=Math.max(1,Math.round((Date.now()-ts)/1000));
+    if(sec<60) return 'hace '+sec+' s';
+    const min=Math.round(sec/60); if(min<60) return 'hace '+min+' min';
+    return 'hace '+Math.round(min/60)+' h';
+  }
+
+  asociaciones = this.buildAsociaciones();
+  buildAsociaciones(){
+    const mk=(id,nombre,corta,region,plan,estado,concursos,admins,scans)=>({id,nombre,corta,region,plan,estado,concursos,admins,scans});
+    return [
+      mk('piura','Asoc. de Criadores y Prop. de Caballos de Paso de Piura','A.C.P.C.P. Piura','Piura','Nacional','activo',
+        [{nombre:'LXXIX Concurso Nacional Oficial',estado:'en_curso',fechas:'18 – 20 Set 2026',cats:26,ejem:312},
+         {nombre:'Concurso Regional de Verano',estado:'finalizado',fechas:'Feb 2026',cats:14,ejem:168},
+         {nombre:'Copa Las Capullanas',estado:'por_iniciar',fechas:'Nov 2026',cats:12,ejem:0}],
+        [{nombre:'Ricardo Seminario',email:'r.seminario@acpcp.pe',rol:'Administrador',ult:'Hace 4 min'},
+         {nombre:'Lucía Otoya',email:'l.otoya@acpcp.pe',rol:'Jurado / carga',ult:'Hace 1 h'}], 2840),
+      mk('lima','Asoc. Nacional de Criadores y Prop. — Lima','A.N.C.P.C.P.P. Lima','Lima','Nacional','activo',
+        [{nombre:'Concurso Nacional Oficial 2026',estado:'por_iniciar',fechas:'Abr 2026',cats:30,ejem:0},
+         {nombre:'Selectivo Lima Sur',estado:'finalizado',fechas:'Ene 2026',cats:18,ejem:210}],
+        [{nombre:'Fernando del Solar',email:'f.delsolar@ancp.pe',rol:'Administrador',ult:'Ayer'}], 4120),
+      mk('lambayeque','Asoc. de Criadores de Lambayeque','A.C.C.P. Lambayeque','Lambayeque','Regional','activo',
+        [{nombre:'Concurso Regional Norte',estado:'en_curso',fechas:'Set 2026',cats:16,ejem:184}],
+        [{nombre:'Carmen Falla',email:'c.falla@lambayeque.pe',rol:'Administrador',ult:'Hace 20 min'}], 1560),
+      mk('trujillo','Asoc. de Criadores de La Libertad','A.C.C.P. Trujillo','La Libertad','Regional','activo',
+        [{nombre:'Concurso Casa Grande',estado:'finalizado',fechas:'Mar 2026',cats:12,ejem:132}],
+        [{nombre:'Jorge Villacorta',email:'j.villacorta@lalibertad.pe',rol:'Administrador',ult:'Hace 3 días'}], 980),
+      mk('arequipa','Asoc. de Criadores del Sur','A.C.C.P. Arequipa','Arequipa','Regional','prueba',
+        [{nombre:'Primer Concurso del Sur',estado:'por_iniciar',fechas:'Dic 2026',cats:10,ejem:0}],
+        [{nombre:'Mateo Rivera',email:'m.rivera@sur.pe',rol:'Administrador',ult:'Hace 1 semana'}], 140),
+      mk('ica','Asoc. de Criadores de Ica','A.C.C.P. Ica','Ica','Regional','suspendido',
+        [{nombre:'Concurso de Vendimia',estado:'finalizado',fechas:'Mar 2025',cats:11,ejem:120}],
+        [{nombre:'Rosa Elías',email:'r.elias@ica.pe',rol:'Administrador',ult:'Hace 2 meses'}], 60),
+    ];
+  }
+  planMeta(p){
+    const m={ Nacional:{color:'#7A5A12',bg:'#F3E7C8'}, Regional:{color:'#2E6486',bg:'#D9E8F1'} };
+    return m[p]||m.Regional;
+  }
+  asocEstadoMeta(e){
+    const m={ activo:{label:'Activo',color:'#4B6E3C',bg:'#DDE9CF',dot:'#5C8347'},
+      prueba:{label:'En prueba',color:'#2E6486',bg:'#D9E8F1',dot:'#3E7FA6'},
+      suspendido:{label:'Suspendido',color:'#8A3B24',bg:'#F3DCD3',dot:'#A8472A'} };
+    return m[e]||m.activo;
+  }
+
+  // ---------- deterministic RNG ----------
+  _seed = 0x9e3779b9;
+  rnd(){ this._seed = (this._seed * 1103515245 + 12345) & 0x7fffffff; return this._seed / 0x7fffffff; }
+  pick(a){ return a[Math.floor(this.rnd()*a.length)]; }
+
+  catalog = this.buildCatalog();
+  concursos = this.buildConcursos();
+
+  buildConcursos(){
+    const c = this.catalog;
+    const lx = { id:'c-lxxix', asocId:'piura', estado:'en_curso',
+      concurso:c.concurso, grupos:c.grupos, premios:c.premios, byId:c.byId, all:c.all };
+    const verano = this._genConc('c-verano','piura','finalizado', {
+      nombre:'Concurso Regional de Verano', anio:'2026', asociacion:c.concurso.asociacion,
+      asocCorta:'A.C.P.C.P. — Piura', sede:'Club de Campo Los Ficus · Piura',
+      fechas:'14 – 15 de Febrero, 2026', totalPruebas:14 },
+      [ ['Capones','Capones de Freno y Espuelas de 4 a 10 años','c',2018,'finalizado',12],
+        ['Capones','Capones de Bozal de 3 a 4 años','c',2022,'finalizado',10],
+        ['Yeguas','Yeguas de Freno y Espuelas de 4 a 10 años','f',2018,'finalizado',11],
+        ['Potros','Potros de Freno y Espuelas de 10 a 12 años','m',2014,'finalizado',9] ]);
+    const capu = { id:'c-capullanas', asocId:'piura', estado:'por_iniciar',
+      concurso:{ nombre:'Copa Las Capullanas', anio:'2026', asociacion:c.concurso.asociacion,
+        asocCorta:'A.C.P.C.P. — Piura', sede:'Coliseo Las Capullanas · Piura',
+        fechas:'21 – 22 de Noviembre, 2026', estado:'por_iniciar', totalPruebas:0 },
+      grupos:[], premios:[], byId:{}, all:[] };
+    return [lx, verano, capu];
+  }
+  _genConc(id, asocId, estado, meta, catSpecs){
+    meta.estado = estado;
+    const counter = { no:100+Math.floor(this.rnd()*400), n:0 };
+    const grupos={}; const order=[];
+    (catSpecs||[]).forEach(sp=>{ const [grupo,nombre,sex,baseYear,est,count]=sp;
+      if(!grupos[grupo]){ grupos[grupo]={nombre:grupo,cats:[]}; order.push(grupo); }
+      grupos[grupo].cats.push(this._genCat(id, counter, grupo, nombre, sex, baseYear, est, count)); });
+    const conc={ id, asocId, estado, concurso:meta, grupos:order.map(g=>grupos[g]), premios:[], byId:{}, all:[] };
+    this._indexConc(conc); return conc;
+  }
+  _genCat(concId, counter, grupo, nombre, sex, baseYear, estado, count){
+    counter.n++;
+    const arr=[]; for(let i=0;i<count;i++){ let res=null,cancha=null;
+      if(estado==='finalizado'){ res=i<3?i+1:null; cancha=30+i; } else if(estado==='en_curso'){ cancha=30+i; }
+      arr.push(this._genEj(concId, counter, sex, baseYear, res, cancha)); }
+    return { id:concId+'-c'+counter.n, grupo, nombre, sex, estado, ejemplares:arr, count:arr.length };
+  }
+  _genEj(concId, counter, sex, baseYear, resultado, cancha){
+    const n=++counter.no;
+    const MN=['Don Hidalgo','Sortario','Regidor','Almirante','Tunante','Heredero','Sultán','Conquistador','Lucero','Soberano','Bandolero','Templario'];
+    const MM=['Relámpago','Imperial','Apolo','Zafiro','Trovador','Halcón','Marqués','Espartano','Centella','Bravío'];
+    const FN=['Estampa','Gala','Princesa','Aurora','Maravilla','Estrella','Marinera','Perla','Azucena','Catedral','Dulcinea','Embrujada'];
+    const PRE=['JCDCH','OSP','CCC','LV','JEB','MFG','LAZ','HEL','SLR','PCH'];
+    const CRIA=['Criadero Casa Grande','Criadero La Viña','Hacienda Monte Grande','Agrícola Pampa Larga','Criadero El Cautivo'];
+    const PROP=['Criadero Casa Grande S.A.C.','Familia Helguero Seminario','Inversiones Garúa S.A.C.','Criadero La Viña','Roberto Temple Seminario'];
+    const pool= sex==='c'?MN: sex==='m'?MM: FN; const base=this.pick(pool);
+    const yr=baseYear-Math.floor(this.rnd()*2);
+    const mo=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Set','Oct','Nov','Dic'][Math.floor(this.rnd()*12)];
+    const day=1+Math.floor(this.rnd()*27);
+    return { id:concId+'-e'+n, no:n, cancha, prefijo:this.pick(PRE), nombre: sex==='c'?base+' (c)':base, sex,
+      codigo:(this.rnd()>.85?'CN-0':'PN-1')+String(2000+Math.floor(this.rnd()*7000)), fechaNac:day+' '+mo+' '+yr,
+      padre:{prefijo:this.pick(PRE),nombre:this.pick(MM)}, madre:{prefijo:this.pick(PRE),nombre:this.pick(FN)},
+      criador:this.pick(CRIA), propietario:this.pick(PROP),
+      microchip:'991001001'+String(400000+Math.floor(this.rnd()*599999)), resultado };
+  }
+  _indexConc(conc){
+    conc.byId={}; conc.all=[];
+    conc.grupos.forEach(g=>g.cats.forEach(c=>{
+      conc.byId[c.id]=c;
+      c.count = c.grupos ? c.grupos.reduce((s,x)=>s+x.ejemplares.length,0) : c.ejemplares.length;
+      (c.grupos? c.grupos.flatMap(x=>x.ejemplares): c.ejemplares).forEach(e=>{ e.catId=c.id; e.catNombre=c.nombre; conc.byId[e.id]=e; conc.all.push(e); });
+    }));
+    conc.concurso.totalPruebas = conc.grupos.reduce((s,g)=>s+g.cats.length,0);
+  }
+  concById(id){ return this.concursos.find(c=>c.id===id); }
+  asocConcursos(asocId){ return this.concursos.filter(c=>c.asocId===asocId); }
+  _placeholderConc = { id:null, asocId:null, estado:'por_iniciar', concurso:{ nombre:'Sin concurso seleccionado', fechas:'', sede:'', anio:'', asocCorta:'', asociacion:'', totalPruebas:0 }, grupos:[], premios:[], byId:{}, all:[] };
+  activeConc(){
+    const c=this.concById(this.state.activeConcId);
+    if(c && c.asocId===this.state.adminAsocId) return c;
+    const mine=this.asocConcursos(this.state.adminAsocId);
+    return mine[0] || this._placeholderConc;
+  }
+  estadoRank(e){ return e==='en_curso'?0 : e==='por_iniciar'?1 : 2; }
+
+  // ---------- super admin: asociaciones ----------
+  enterAsoc = (id) => { const a=this.asociaciones.find(x=>x.id===id); if(!a) return; const concs=this.asocConcursos(id); this.setState({ role:'admin', adminLogged:true, impersonating:true, adminAsocId:id, activeConcId: concs[0]?concs[0].id:null, screen:'concursos' }); };
+  exitImpersonation = () => this.setState({ role:'super', impersonating:false, adminAsocId:'piura', activeConcId:'c-lxxix', screen:'sasocdet', selAsoc:this.state.adminAsocId });
+  toggleAsocEstado = (id) => { const a=this.asociaciones.find(x=>x.id===id); if(!a) return; a.estado = a.estado==='suspendido'?'activo':'suspendido'; this.setState(s=>({ bump:s.bump+1 })); };
+  startNuevaAsoc = () => this.setState({ screen:'nuevaasoc', editAsocId:null, asocForm:{ nombre:'', corta:'', region:'', plan:'Regional', email:'', user:'', pass:'' }, asocMsg:'' });
+  startEditAsoc = (id) => { const a=this.asociaciones.find(x=>x.id===id); if(!a) return; const adm=a.admins[0]||{}; this.setState({ screen:'nuevaasoc', editAsocId:id, asocMsg:'', asocForm:{ nombre:a.nombre, corta:a.corta, region:a.region, plan:a.plan, email:adm.email||'', user:a.user||adm.email||'', pass:a.pass||'' } }); };
+  setAsocForm = (field) => (e) => { const v=e.target.value; this.setState(s=>({ asocForm:Object.assign({}, s.asocForm, { [field]:v }) })); };
+  saveNuevaAsoc = () => {
+    const f=this.state.asocForm;
+    if(!f.nombre.trim() || !f.corta.trim()){ this.setState({ asocMsg:'Completa el nombre y la sigla de la asociación.' }); return; }
+    if(!this.state.editAsocId && (!f.user.trim() || !f.pass.trim())){ this.setState({ asocMsg:'Define usuario y contraseña de acceso para el administrador.' }); return; }
+    if(this.state.editAsocId){
+      const a=this.asociaciones.find(x=>x.id===this.state.editAsocId);
+      Object.assign(a, { nombre:f.nombre.trim(), corta:f.corta.trim(), region:(f.region||'').trim()||a.region, plan:f.plan, user:f.user.trim(), pass:f.pass });
+      if(a.admins[0]) a.admins[0].email=f.email.trim()||a.admins[0].email;
+      this.setState(s=>({ bump:s.bump+1, screen:'sasocdet', selAsoc:a.id, editAsocId:null }));
+    } else {
+      const id='a-'+Date.now().toString(36);
+      this.asociaciones.push({ id, nombre:f.nombre.trim(), corta:f.corta.trim(), region:(f.region||'').trim()||'—', plan:f.plan, estado:'activo',
+        user:f.user.trim(), pass:f.pass, scans:0,
+        concursos:[], admins:[{ nombre:f.email.split('@')[0]||'Administrador', email:f.email.trim()||f.user.trim(), rol:'Administrador', ult:'Nunca' }] });
+      this.setState(s=>({ bump:s.bump+1, screen:'sasocdet', selAsoc:id, editAsocId:null }));
+    }
+  };
+
+  estadoRankKeep(){}
+
+  // ---------- concurso management ----------
+  openConcurso = (id) => { this.setState({ activeConcId:id, screen:'dashboard' }); };
+  goConcursos = () => this.setState({ screen:'concursos' });
+  startNewConc = () => this.setState({ screen:'nuevoconc', editConcId:null, concForm:{ nombre:'', anio:'2026', sede:'', fechas:'' }, concMsg:'' });
+  startEditConc = (id) => { const c=this.concById(id); if(!c) return; this.setState({ screen:'nuevoconc', editConcId:id, concMsg:'', concForm:{ nombre:c.concurso.nombre||'', anio:c.concurso.anio||'2026', sede:c.concurso.sede||'', fechas:c.concurso.fechas||'' } }); };
+  setConcForm = (field) => (e) => { const v=e.target.value; this.setState(s=>({ concForm:Object.assign({}, s.concForm, { [field]:v }) })); };
+  saveConcurso = () => {
+    const f=this.state.concForm;
+    if(!f.nombre.trim()){ this.setState({ concMsg:'Falta el nombre del concurso.' }); return; }
+    const asocId=this.state.adminAsocId;
+    const asoc=this.asociaciones.find(a=>a.id===asocId);
+    const meta={ nombre:f.nombre.trim(), anio:(f.anio||'2026').trim(),
+      asociacion: asoc?asoc.nombre:'', asocCorta: asoc?asoc.corta:'',
+      sede:(f.sede||'').trim()||'Sede por confirmar', fechas:(f.fechas||'').trim()||'Fecha por confirmar',
+      estado:'por_iniciar', totalPruebas:0 };
+    if(this.state.editConcId){
+      const c=this.concById(this.state.editConcId);
+      Object.assign(c.concurso, { nombre:meta.nombre, anio:meta.anio, sede:meta.sede, fechas:meta.fechas });
+      this.setState(s=>({ bump:s.bump+1, screen:'concursos', editConcId:null }));
+    } else {
+      const id='c-'+Date.now().toString(36);
+      const conc={ id, asocId, estado:'por_iniciar', concurso:meta, grupos:[], premios:[], byId:{}, all:[] };
+      this.concursos.push(conc);
+      this.setState(s=>({ bump:s.bump+1, screen:'dashboard', activeConcId:id, editConcId:null }));
+    }
+  };
+  setConcEstado = (id, estado) => { const c=this.concById(id); if(!c) return; c.estado=estado; c.concurso.estado=estado; this.setState(s=>({ bump:s.bump+1 })); };
+
+  // ---------- category creation ----------
+  setNewCat = (field) => (e) => { const v=e.target.value; this.setState(s=>({ newCat:Object.assign({}, s.newCat, { [field]:v }) })); };
+  addCategoria = () => {
+    const nc=this.state.newCat; const conc=this.activeConc();
+    const sexMap={ Capones:'c', Potrancas:'f', Potrillos:'m', Potros:'m', Yeguas:'f', 'Pruebas iniciales':'m' };
+    const sex=sexMap[nc.grupo]||'m';
+    const nombre=nc.grupo==='Pruebas iniciales' ? (nc.modalidad) : (nc.grupo+' de '+nc.modalidad+' de '+nc.edad);
+    const nGrupos={ 'Sin grupos':0, '2 grupos':2, '3 grupos':3, '4 grupos':4 }[nc.grupos]||0;
+    const cid=conc.id+'-c'+Date.now().toString(36);
+    let grupoObj=conc.grupos.find(g=>g.nombre===nc.grupo);
+    if(!grupoObj){ grupoObj={ nombre:nc.grupo, cats:[] }; conc.grupos.push(grupoObj); }
+    const cObj={ id:cid, grupo:nc.grupo, nombre, sex, estado:'por_iniciar' };
+    if(nGrupos>0){ cObj.grupos=[]; for(let i=0;i<nGrupos;i++) cObj.grupos.push({ nombre:'Grupo '+(i+1), estado:'por_iniciar', ejemplares:[] }); cObj.count=0; }
+    else { cObj.ejemplares=[]; cObj.count=0; }
+    grupoObj.cats.push(cObj);
+    this._indexConc(conc);
+    this.setState(s=>({ bump:s.bump+1, catMsg:'"'+nombre+'" agregada. Ahora registra sus ejemplares.' }));
+  };
+  delCategoria = (catId) => {
+    const conc=this.activeConc();
+    conc.grupos.forEach(g=>{ const i=g.cats.findIndex(c=>c.id===catId); if(i>=0) g.cats.splice(i,1); });
+    conc.grupos = conc.grupos.filter(g=>g.cats.length);
+    this._indexConc(conc);
+    this.setState(s=>({ bump:s.bump+1 }));
+  };
+
+  buildCatalog(){
+    this._seed = 0x9e3779b9;
+    let no = 100;
+    const nextNo = () => (no += 1);
+    const PRE = ['JCDCH','OSP','CCC','LV','JEB','MFG','LAZ','HMG','SLR','PCH','RMP','AAA','HEL','CGD'];
+    const MN = ['Don Hidalgo','Martillero','Sortario','Faraón','Califa','Regidor','Almirante','Tunante','Heredero','Bandolero','Cautivo','Tahúr','Sultán','Conquistador','Vendaval','Lucero','Templario','Indómito','Soberano','Justiciero'];
+    const MM = ['Relámpago','Centella','Brujo','Galante','Imperial','Apolo','Zafiro','Diamante','Trovador','Bravío','Halcón','Cordobés','Marqués','Vizconde','Rey Mago','Espartano'];
+    const FN = ['Estampa','Gala','Cautiva','Princesa','Reina','Aurora','Dulcinea','Esperanza','Maravilla','Estrella','Llama','Garúa','Marinera','Salamanca','Perla','Azucena','Marfileña','Cadenciosa','Catedral','Embrujada'];
+    const CRIA = ['Jorge Villacorta Díaz e Hijos / Criadero Lazcán','Criadero Casa Grande','Agropecuaria San Pablo S.A.C.','Sucesión Helguero','Criadero La Viña','Manuel Falla Garcés','Criadero El Cautivo','Hacienda Monte Grande','Criadero Don Cosme','Agrícola Pampa Larga'];
+    const PROP = ['Jorge Villacorta Díaz','Criadero Casa Grande S.A.C.','Familia Helguero Seminario','Roberto Temple Seminario','María del Carmen Falla','Inversiones Garúa S.A.C.','Augusto Cisneros / Lucía Cisneros','Criadero La Viña','Hermanos Otoya Saavedra'];
+
+    const mkEj = (sex, baseYear, resultado, cancha, used) => {
+      const n = nextNo();
+      const pool = sex==='c' ? MN : sex==='m' ? MM : FN;
+      let base = this.pick(pool); let g=0;
+      while(used && used.has(base) && g<12){ base = this.pick(pool); g++; }
+      if(used) used.add(base);
+      let nombre = sex==='c' ? base+' (c)' : base;
+      const yr = baseYear - Math.floor(this.rnd()*2);
+      const mo = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Set','Oct','Nov','Dic'][Math.floor(this.rnd()*12)];
+      const day = 1 + Math.floor(this.rnd()*27);
+      return {
+        id: 'e'+n,
+        no: n,
+        cancha: cancha,
+        prefijo: this.pick(PRE),
+        nombre,
+        codigo: (this.rnd()>.85?'CN-0':'PN-1') + String(2000+Math.floor(this.rnd()*7000)),
+        fechaNac: day+' '+mo+' '+yr,
+        padre: { prefijo: this.pick(PRE), nombre: this.pick(sex==='f'?MM:MM) + (this.rnd()>.6?'-TE':'') },
+        madre: { prefijo: this.pick(PRE), nombre: this.pick(FN) },
+        criador: this.pick(CRIA),
+        propietario: this.rnd()>.8 ? this.pick(PROP)+' / '+this.pick(PROP) : this.pick(PROP),
+        microchip: '991001001' + String(400000 + Math.floor(this.rnd()*599999)),
+        resultado,
+      };
+    };
+
+    const mkList = (count, sex, baseYear, estado) => {
+      const arr = []; const used = new Set();
+      for (let i=0;i<count;i++){
+        let res = null, cancha = null;
+        if (estado==='finalizado'){ res = i<3 ? i+1 : null; cancha = 30+i; }
+        else if (estado==='en_curso'){ cancha = 30+i; }
+        arr.push(mkEj(sex, baseYear, res, cancha, used));
+      }
+      return arr;
+    };
+
+    let cid = 0;
+    const cat = (grupo, nombre, sex, baseYear, estado, count, grupos) => {
+      cid++;
+      const c = { id:'c'+cid, grupo, nombre, sex, estado };
+      if (grupos){
+        c.grupos = grupos.map((g,gi)=>({ nombre:g.nombre, estado:g.estado, ejemplares: mkList(g.count, sex, baseYear, g.estado) }));
+        c.count = c.grupos.reduce((s,g)=>s+g.ejemplares.length,0);
+      } else {
+        c.ejemplares = mkList(count, sex, baseYear, estado);
+        c.count = c.ejemplares.length;
+      }
+      return c;
+    };
+
+    const grupos = [
+      { nombre:'Pruebas iniciales', cats:[
+        cat('Pruebas iniciales','Prueba de Menores','c',2019,'finalizado',9),
+        cat('Pruebas iniciales','Prueba de Enfrenadura','m',2017,'en_curso',11),
+        cat('Pruebas iniciales','Burros Hechores','m',2016,'por_iniciar',6),
+        cat('Pruebas iniciales','Conjunto de Mulares','m',2016,'por_iniciar',5),
+      ]},
+      { nombre:'Capones', cats:[
+        cat('Capones','Capones de Bozal de 3 a 4 años','c',2022,'finalizado',13),
+        cat('Capones','Capones de Freno y Espuelas de 4 a 10 años','c',2018,'en_curso',null,[
+          {nombre:'Grupo 1',estado:'finalizado',count:15},
+          {nombre:'Grupo 2',estado:'en_curso',count:16},
+          {nombre:'Grupo 3',estado:'por_iniciar',count:14},
+          {nombre:'Grupo 4',estado:'por_iniciar',count:15},
+        ]),
+        cat('Capones','Capones de Freno y Espuelas de 10 a 12 años','c',2014,'en_curso',12),
+        cat('Capones','Capones de Freno y Espuelas de 12 a 14 años','c',2012,'por_iniciar',10),
+        cat('Capones','Capones de Freno y Espuelas de 14 años a más','c',2009,'por_iniciar',9),
+      ]},
+      { nombre:'Potrancas', cats:[
+        cat('Potrancas','Potrancas al Cabestro de 1 a 3 años','f',2024,'finalizado',null,[
+          {nombre:'Grupo 1',estado:'finalizado',count:14},
+          {nombre:'Grupo 2',estado:'finalizado',count:13},
+        ]),
+        cat('Potrancas','Potrancas de Bozal de 3 a 4 años','f',2022,'en_curso',null,[
+          {nombre:'Grupo 1',estado:'finalizado',count:15},
+          {nombre:'Grupo 2',estado:'en_curso',count:14},
+        ]),
+      ]},
+      { nombre:'Potrillos', cats:[
+        cat('Potrillos','Potrillos al Cabestro de 1 a 3 años','m',2024,'finalizado',12),
+        cat('Potrillos','Potrillos de Bozal de 3 a 4 años','m',2022,'por_iniciar',11),
+      ]},
+      { nombre:'Potros', cats:[
+        cat('Potros','Potros de Freno y Espuelas de 4 a 10 años','m',2018,'finalizado',14),
+        cat('Potros','Potros de Freno y Espuelas de 10 a 12 años','m',2014,'en_curso',13),
+        cat('Potros','Potros de Freno y Espuelas de 12 a 14 años','m',2012,'por_iniciar',10),
+        cat('Potros','Potros de Freno y Espuelas de 14 años a más','m',2009,'por_iniciar',9),
+      ]},
+      { nombre:'Yeguas', cats:[
+        cat('Yeguas','Yeguas de Freno y Espuelas de 4 a 10 años','f',2018,'finalizado',13),
+        cat('Yeguas','Yeguas de Freno y Espuelas de 10 a 12 años','f',2014,'en_curso',12),
+        cat('Yeguas','Yeguas de Freno y Espuelas de 12 a 14 años','f',2012,'por_iniciar',11),
+        cat('Yeguas','Yeguas de Freno y Espuelas de 14 años a más','f',2009,'por_iniciar',8),
+      ]},
+    ];
+
+    // flat index
+    const byId = {}; const all = [];
+    grupos.forEach(g=>g.cats.forEach(c=>{
+      byId[c.id]=c;
+      (c.grupos ? c.grupos.flatMap(x=>x.ejemplares) : c.ejemplares).forEach(e=>{ e.catId=c.id; e.catNombre=c.nombre; byId[e.id]=e; all.push(e); });
+    }));
+
+    // premios especiales — winners reference real finalizado ejemplares
+    const champ = (catId, pos) => {
+      const c = byId[catId];
+      const list = c.grupos ? c.grupos.flatMap(x=>x.ejemplares) : c.ejemplares;
+      return list.find(e=>e.resultado===pos) || list[0];
+    };
+    const premios = [
+      { id:'p1', tipo:'Campeonato de Bozal', nombre:'Campeón de Bozal — Capón', estado:'finalizado', ganador: champ('c5',1), reserva: champ('c5',2), nota:'Entre Capones de Bozal de 3 a 4 años' },
+      { id:'p2', tipo:'Campeonato de Bozal', nombre:'Campeona de Bozal — Hembra', estado:'finalizado', ganador: champ('c8',1), reserva: champ('c8',2), nota:'Entre Potrancas de Bozal' },
+      { id:'p3', tipo:'Campeonato del Año', nombre:'Campeón del Año — Capón Mayor', estado:'en_curso', ganador:null, reserva:null, nota:'Se define entre categorías de Freno y Espuelas' },
+      { id:'p4', tipo:'Campeonato del Año', nombre:'Campeón del Año — Macho Mayor', estado:'en_curso', ganador:null, reserva:null, nota:'Se define entre Potros 14 años a más' },
+      { id:'p5', tipo:'Campeonato del Año', nombre:'Campeona del Año — Hembra Mayor', estado:'por_iniciar', ganador:null, reserva:null, nota:'Se define al cierre de Yeguas' },
+      { id:'p6', tipo:'Premios al Cabestro', nombre:'Mejor Potranca Presentada al Cabestro', estado:'finalizado', ganador: champ('c11',1), reserva:null, nota:'Premio único' },
+      { id:'p7', tipo:'Premios al Cabestro', nombre:'Mejor Potrillo Presentado al Cabestro', estado:'finalizado', ganador: champ('c16',1), reserva:null, nota:'Premio único' },
+      { id:'p8', tipo:'Mérito Zootécnico', nombre:'Mérito Zootécnico — Hembra', estado:'por_iniciar', ganador:null, reserva:null, nota:'Jurado especial' },
+      { id:'p9', tipo:'Mérito Zootécnico', nombre:'Mérito Zootécnico — Macho', estado:'por_iniciar', ganador:null, reserva:null, nota:'Jurado especial' },
+      { id:'p10', tipo:'Premios de conjunto', nombre:'Premio Madre e Hija', estado:'en_curso', ganador:null, reserva:null, nota:'Reconoce la línea materna' },
+      { id:'p11', tipo:'Premios de conjunto', nombre:'Premio Tres Generaciones', estado:'por_iniciar', ganador:null, reserva:null, nota:'Abuela, madre e hija en pista' },
+      { id:'p12', tipo:'Premios de conjunto', nombre:'Premio Progenie de Padre', estado:'por_iniciar', ganador:null, reserva:null, nota:'Mejor descendencia de un padrillo' },
+    ];
+
+    const concurso = {
+      nombre:'LXXIX Concurso Nacional Oficial del Caballo Peruano de Paso',
+      anio:'2026',
+      asociacion:'Asociación de Criadores y Propietarios de Caballos de Paso de Piura',
+      asocCorta:'A.C.P.C.P. — Piura',
+      sede:'Coliseo Las Capullanas · Piura, Perú',
+      fechas:'18 – 20 de Septiembre, 2026',
+      estado:'en_curso',
+      totalPruebas:48,
+    };
+
+    return { concurso, grupos, premios, byId, all };
+  }
+
+  // ---------- estado / posición meta ----------
+  estadoMeta(e){
+    const m = {
+      por_iniciar:{ label:'Por iniciar', color:'#9A6A12', bg:'#F3E7C8', dot:'#D29A2A', icon:'◷' },
+      en_curso:   { label:'En curso',    color:'#2E6486', bg:'#D9E8F1', dot:'#3E7FA6', icon:'◉' },
+      finalizado: { label:'Finalizado',  color:'#4B6E3C', bg:'#DDE9CF', dot:'#5C8347', icon:'✓' },
+    };
+    return m[e] || m.por_iniciar;
+  }
+  posMeta(r){
+    if(r===1) return { label:'1.º', color:'#7A5A12', bg:'linear-gradient(135deg,#F0D77E,#C9A24B)', ring:'#C9A24B', name:'Primer puesto' };
+    if(r===2) return { label:'2.º', color:'#4d535a', bg:'linear-gradient(135deg,#E2E5E9,#AEB4BB)', ring:'#AEB4BB', name:'Segundo puesto' };
+    if(r===3) return { label:'3.º', color:'#7a4f2c', bg:'linear-gradient(135deg,#DCA877,#B07A4A)', ring:'#B07A4A', name:'Tercer puesto' };
+    return null;
+  }
+
+  // ---------- navigation ----------
+  nav(screen, patch){ this.setState(Object.assign({ screen }, patch||{})); try{ this._scrollTop(); }catch(e){} }
+  _scrollTop(){ const el = document.querySelector('.cg-scroll[style*="overflow-y"]'); }
+
+  goUser = () => this.setState({ role:'user', screen:'landing' });
+  goAdmin = () => this.setState({ role:'admin', screen: this.state.adminLogged ? 'dashboard' : 'login' });
+  goSuper = () => this.setState({ role:'super', screen: this.state.superLogged ? 'sdash' : 'slogin' });
+  doSLogin = () => this.setState({ superLogged:true, screen:'sdash' });
+
+  setBp = (bp) => this.setState({ bp });
+
+  openCat = (id) => { this.nav('detalle',{ catId:id, grupoIdx:0 }); };
+  openEj = (id) => this.nav('ficha',{ ejId:id });
+  openPremio = () => this.nav('premios');
+
+  setResult = (ejId, pos) => {
+    const e = this.activeConc().byId[ejId];
+    if(!e) return;
+    // clear any other holder of this pos within same scope
+    if(pos){
+      const c = this.activeConc().byId[e.catId];
+      const scope = this.state.resGrupo!=null && c.grupos ? c.grupos[this.state.resGrupo].ejemplares : (c.grupos ? c.grupos.flatMap(x=>x.ejemplares) : c.ejemplares);
+      scope.forEach(x=>{ if(x.resultado===pos && x.id!==ejId) x.resultado=null; });
+    }
+    e.resultado = (e.resultado===pos) ? null : pos;
+    this.setState(s=>({ bump:s.bump+1 }));
+  };
+
+  // ---------- derived ----------
+  frameFor(bp){ return bp==='mobile'?390 : bp==='tablet'?834 : 1216; }
+
+  pillStyle(active, dark){
+    const base='height:34px;padding:0 15px;border-radius:7px;font-size:12.5px;font-weight:600;letter-spacing:.02em;cursor:pointer;border:1px solid transparent;transition:all .15s;font-family:Archivo,sans-serif;';
+    if(active) return base+'background:#A8472A;color:#F7F2E8;box-shadow:0 1px 3px rgba(0,0,0,.3)';
+    return base+'background:transparent;color:'+(dark?'#cabd9f':'#8c8270')+';';
+  }
+  navStyle(active){
+    const base='height:32px;padding:0 13px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid transparent;font-family:Archivo,sans-serif;transition:all .15s;';
+    return active ? base+'background:#A8472A;color:#fff' : base+'background:transparent;color:#cabd9f';
+  }
+  posBtn(current,val){
+    const sel = current===val;
+    const base='flex:1;min-width:0;height:56px;border-radius:13px;font-family:Archivo,sans-serif;font-weight:700;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .12s;border:2px solid ';
+    if(val===null){ return base + (sel?'#9a8f7a;background:#9a8f7a;color:#fff':'#E5DBC6;background:#FBF7EF;color:#a89c83'); }
+    const pm=this.posMeta(val);
+    if(sel) return base + pm.ring+';background:'+pm.bg+';color:'+pm.color+';box-shadow:0 6px 16px -6px '+pm.ring;
+    return base + '#E5DBC6;background:#FBF7EF;color:#b8ac93';
+  }
+  lvStyle(active){
+    const base='height:30px;padding:0 13px;border-radius:30px;font-size:11px;font-weight:600;letter-spacing:.04em;cursor:pointer;font-family:Archivo,sans-serif;transition:all .15s;border:1px solid ';
+    return active ? base+'#2A2118;background:#2A2118;color:#F2E9D6' : base+'#D8CcB2;background:transparent;color:#6b6353';
+  }
+  tabBtn(active){
+    return 'flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border:0;background:'+(active?'#FBEEE6':'transparent')+';cursor:pointer;border-radius:13px;font-family:Archivo,sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.01em;color:'+(active?'#A8472A':'#9a8f7a')+';transition:all .15s';
+  }
+
+  renderVals(){
+    const s = this.state;
+    const cat = this.activeConc();
+    const isUser = s.role==='user';
+    const isUserView = isUser;
+    const isAdminChrome = s.role==='admin' && s.adminLogged && s.screen!=='login';
+    const isSuperChrome = s.role==='super' && s.superLogged && s.screen!=='slogin';
+
+    const go = {
+      landing:()=>this.nav('landing'), categorias:()=>this.nav('categorias'),
+      busqueda:()=>this.nav('busqueda'), premios:()=>this.nav('premios'),
+      dashboard:()=>this.nav('dashboard'), resultados:()=>this.nav('resultados',{resCatId:s.resCatId}),
+      carga:()=>this.nav('carga'), qr:()=>this.nav('qr'), cargacat:()=>this.nav('cargacat'), concursos:()=>this.nav('concursos'),
+      sdash:()=>this.nav('sdash'), sasoc:()=>this.nav('sasoc'), susers:()=>this.nav('susers'),
+    };
+
+    const screenOptions = [
+      {id:'landing',label:'① Landing del concurso'},
+      {id:'categorias',label:'② Listado de categorías'},
+      {id:'detalle',label:'③ Detalle de categoría'},
+      {id:'ficha',label:'④ Ficha de ejemplar'},
+      {id:'premios',label:'⑤ Premios especiales'},
+      {id:'busqueda',label:'⑥ Búsqueda'},
+      {id:'login',label:'⑦ Login / Asociación'},
+      {id:'dashboard',label:'⑧ Dashboard admin'},
+      {id:'concursos',label:'⑧b Mis concursos'},
+      {id:'nuevoconc',label:'⑧c Crear / editar concurso'},
+      {id:'carga',label:'⑨ Carga de catálogo'},
+      {id:'cargacat',label:'⑨b Ingreso de ejemplares'},
+      {id:'resultados',label:'⑩ Ingreso de resultados'},
+      {id:'qr',label:'⑪ Generador de QR'},
+      {id:'slogin',label:'⑫ Central · Acceso'},
+      {id:'sdash',label:'⑬ Central · Resumen global'},
+      {id:'sasoc',label:'⑭ Central · Asociaciones'},
+      {id:'nuevaasoc',label:'⑭b Central · Nueva asociación'},
+      {id:'sasocdet',label:'⑮ Central · Detalle asociación'},
+      {id:'susers',label:'⑯ Central · Usuarios'},
+      {id:'sconc',label:'⑰ Central · Monitor de concurso'},
+    ];
+
+    // ----- stats -----
+    let nFin=0,nCur=0,nIni=0,nCats=0;
+    cat.grupos.forEach(g=>g.cats.forEach(c=>{ nCats++; if(c.estado==='finalizado')nFin++; else if(c.estado==='en_curso')nCur++; else nIni++; }));
+    const stats={ nCats, nFin, nCur, nIni };
+    const concursoEm = this.estadoMeta(cat.concurso.estado);
+
+    // ----- landing destacados (en curso) -----
+    const enCurso=[]; cat.grupos.forEach(g=>g.cats.forEach(c=>{ if(c.estado==='en_curso') enCurso.push(c); }));
+    const destacados = enCurso.slice(0,4).map(c=>({ id:c.id, nombre:c.nombre, grupo:c.grupo, count:c.count, em:this.estadoMeta(c.estado), onOpen:()=>this.openCat(c.id) }));
+
+    // ----- categorias filtered -----
+    const q=(s.catQuery||'').trim().toLowerCase();
+    const fe=s.filterEstado;
+    const gruposView = cat.grupos.map(g=>({
+      nombre:g.nombre,
+      cats: g.cats.filter(c=> (fe==='todas'||c.estado===fe) && (!q || c.nombre.toLowerCase().includes(q)))
+        .map(c=>({ id:c.id, nombre:c.nombre, grupo:c.grupo, count:c.count, em:this.estadoMeta(c.estado),
+          gruposLabel: c.grupos? (c.grupos.length+' grupos') : null, onOpen:()=>this.openCat(c.id) }))
+    })).filter(g=>g.cats.length);
+    const counts={ todas:nCats, por_iniciar:nIni, en_curso:nCur, finalizado:nFin };
+    const mkF=(id,label)=>({ id, label, count:counts[id], active:fe===id,
+      style:'display:flex;align-items:center;gap:7px;height:38px;padding:0 15px;border-radius:30px;cursor:pointer;font-family:Archivo,sans-serif;font-size:12.5px;font-weight:600;transition:all .15s;border:1px solid '+(fe===id?'#2A2118;background:#2A2118;color:#F2E9D6':'#E0D5BF;background:#FBF7EF;color:#5C5347'),
+      badge:'font-size:11px;font-weight:700;padding:1px 7px;border-radius:20px;background:'+(fe===id?'rgba(255,255,255,.18)':'#EFE7D4')+';color:'+(fe===id?'#F2E9D6':'#8c8270'),
+      onClick:()=>this.setState({filterEstado:id}) });
+    const filterPills=[mkF('todas','Todas'),mkF('por_iniciar','Por iniciar'),mkF('en_curso','En curso'),mkF('finalizado','Finalizado')];
+    const noResults = gruposView.length===0;
+
+    // defaults so direct navigation always has content
+    let defCat=null; cat.grupos.forEach(g=>g.cats.forEach(c=>{ if(!defCat && c.estado==='finalizado' && !c.grupos) defCat=c; }));
+    let firstCat=null; cat.grupos.forEach(g=>g.cats.forEach(c=>{ if(!firstCat) firstCat=c; }));
+    const defCatId = defCat? defCat.id : (firstCat? firstCat.id : null);
+    const defEjId = defCat ? defCat.ejemplares[0].id : (cat.all.length? cat.all[0].id : null);
+    const catIdEff = (s.catId && cat.byId[s.catId]) ? s.catId : defCatId;
+    const ejIdEff = (s.ejId && cat.byId[s.ejId]) ? s.ejId : defEjId;
+
+    // ----- detalle -----
+    let det=null;
+    if(catIdEff && cat.byId[catIdEff]){
+      const c=cat.byId[catIdEff]; const hasG=!!c.grupos;
+      const gi=Math.min(s.grupoIdx, hasG?c.grupos.length-1:0);
+      const list=hasG? c.grupos[gi].ejemplares : c.ejemplares;
+      const estado=hasG? c.grupos[gi].estado : c.estado;
+      const tabs= hasG? c.grupos.map((g,i)=>({ nombre:g.nombre, count:g.ejemplares.length, em:this.estadoMeta(g.estado), active:i===gi,
+        style:'display:flex;align-items:center;gap:8px;height:40px;padding:0 16px;border-radius:11px;cursor:pointer;font-family:Archivo,sans-serif;font-size:13px;font-weight:600;white-space:nowrap;transition:all .15s;border:1px solid '+(i===gi?'#A8472A;background:#A8472A;color:#F7F2E8':'#E0D5BF;background:#FBF7EF;color:#5C5347'),
+        onClick:()=>this.setState({grupoIdx:i}) })) : [];
+      const rows=list.map(e=>({ id:e.id, no:e.no, prefijo:e.prefijo, nombre:e.nombre, pm:this.posMeta(e.resultado),
+        canchaLabel:e.cancha?('Cancha '+e.cancha):'—', hasPos:!!e.resultado, onOpen:()=>this.openEj(e.id) }));
+      const podium=[1,2,3].map(p=>list.find(e=>e.resultado===p)).filter(Boolean).map(e=>({ id:e.id, prefijo:e.prefijo, nombre:e.nombre, no:e.no, pm:this.posMeta(e.resultado), onOpen:()=>this.openEj(e.id) }));
+      det={ nombre:c.nombre, grupo:c.grupo, em:this.estadoMeta(estado), count:list.length, hasG, tabs, rows, podium, showPodium: estado==='finalizado'&&podium.length>0 };
+    }
+
+    // ----- ficha -----
+    let fic=null;
+    if(ejIdEff && cat.byId[ejIdEff]){
+      const e=cat.byId[ejIdEff]; const c=cat.byId[e.catId];
+      fic={ no:e.no, prefijo:e.prefijo, nombre:e.nombre, codigo:e.codigo, fechaNac:e.fechaNac, microchip:e.microchip,
+        criador:e.criador, propietario:e.propietario, catNombre:c.nombre, grupo:c.grupo,
+        padreFull:e.padre.prefijo+' · '+e.padre.nombre, madreFull:e.madre.prefijo+' · '+e.madre.nombre,
+        canchaLabel:e.cancha?('#'+e.cancha):'Sin asignar', pm:this.posMeta(e.resultado), em:this.estadoMeta(c.estado),
+        hasPos:!!e.resultado, noPos:!e.resultado, onCat:()=>this.openCat(e.catId) };
+    }
+
+    // ----- premios -----
+    const tiposOrder=[]; const seen={};
+    cat.premios.forEach(p=>{ if(!seen[p.tipo]){ seen[p.tipo]=[]; tiposOrder.push(p.tipo); } seen[p.tipo].push(p); });
+    const premiosView=tiposOrder.map(t=>({ nombre:t, items:seen[t].map(p=>({
+      id:p.id, nombre:p.nombre, nota:p.nota, em:this.estadoMeta(p.estado), resuelto:!!p.ganador,
+      ganadorNombre: p.ganador? (p.ganador.prefijo+' · '+p.ganador.nombre) : null,
+      ganadorCriador: p.ganador? p.ganador.criador : null,
+      reservaNombre: p.reserva? (p.reserva.prefijo+' · '+p.reserva.nombre) : null,
+      onGanador: p.ganador? (()=>this.openEj(p.ganador.id)) : null,
+    })) }));
+
+    // ----- busqueda -----
+    const bq=(s.query||'').trim().toLowerCase();
+    const results = bq.length>=2 ? cat.all.filter(e=>
+        e.nombre.toLowerCase().includes(bq) || e.criador.toLowerCase().includes(bq) ||
+        e.propietario.toLowerCase().includes(bq) || (e.prefijo+' '+e.nombre).toLowerCase().includes(bq)
+      ).slice(0,40).map(e=>({ id:e.id, prefijo:e.prefijo, nombre:e.nombre, catNombre:e.catNombre, no:e.no,
+        criador:e.criador, pm:this.posMeta(e.resultado), onOpen:()=>this.openEj(e.id) })) : [];
+    const setQuery=(e)=>this.setState({ query:e.target.value });
+    const onSearchKey=(e)=>{ if(e.key==='Enter') this.setState({ screen:'busqueda' }); };
+    const submitSearch=()=>this.setState({ screen:'busqueda' });
+
+    // ----- admin -----
+    const dashCats=[]; cat.grupos.forEach(g=>g.cats.forEach(c=>dashCats.push({ id:c.id, nombre:c.nombre, grupo:c.grupo, em:this.estadoMeta(c.estado), count:c.count, onManage:()=>this.nav('resultados',{ resCatId:c.id, resGrupo:0 }), onCarga:()=>this.startCargaCat(c.id), onDel:()=>this.delCategoria(c.id) })));
+    const totalEjem = cat.all.length;
+    const catVacio = dashCats.length===0;
+
+    // ----- concursos de la asociación -----
+    const _asocId = s.adminAsocId;
+    const _mine = this.asocConcursos(_asocId).slice().sort((a,b)=> this.estadoRank(a.estado)-this.estadoRank(b.estado));
+    const concursosView = _mine.map(cc=>{
+      const nCats = cc.grupos.reduce((n,g)=>n+g.cats.length,0);
+      const nEj = cc.all.length;
+      return { id:cc.id, nombre:cc.concurso.nombre, fechas:cc.concurso.fechas, sede:cc.concurso.sede,
+        anio:cc.concurso.anio, em:this.estadoMeta(cc.estado), nCats, nEj, active:cc.id===s.activeConcId,
+        onOpen:()=>this.openConcurso(cc.id), onEdit:()=>this.startEditConc(cc.id) };
+    });
+    const concCounts={ en_curso:_mine.filter(c=>c.estado==='en_curso').length, por_iniciar:_mine.filter(c=>c.estado==='por_iniciar').length, finalizado:_mine.filter(c=>c.estado==='finalizado').length };
+    const activeConcMeta={ nombre:cat.concurso.nombre, estado:cat.estado, em:this.estadoMeta(cat.estado) };
+    const cf=s.concForm;
+    const concFormView={ nombre:cf.nombre, anio:cf.anio, sede:cf.sede, fechas:cf.fechas, msg:s.concMsg,
+      editing:!!s.editConcId, set:{ nombre:this.setConcForm('nombre'), anio:this.setConcForm('anio'), sede:this.setConcForm('sede'), fechas:this.setConcForm('fechas') },
+      onSave:this.saveConcurso };
+    const nc=s.newCat;
+    const newCatView={ grupo:nc.grupo, modalidad:nc.modalidad, edad:nc.edad, grupos:nc.grupos, msg:s.catMsg,
+      set:{ grupo:this.setNewCat('grupo'), modalidad:this.setNewCat('modalidad'), edad:this.setNewCat('edad'), grupos:this.setNewCat('grupos') },
+      onAdd:this.addCategoria };
+    const dashCatsDel=dashCats.map(c=>({ ...c, delStyle:'width:30px;height:30px;flex:none;border:1px solid #EAD6CE;border-radius:8px;background:#F7ECE7;color:#A8472A;font-size:14px;cursor:pointer' }));
+
+    // ----- carga: ingreso de ejemplares por categoría -----
+    let cargaV=null;
+    const cc = s.cargaCatId ? cat.byId[s.cargaCatId] : null;
+    if(cc){
+      const hasG=!!cc.grupos; const gi=Math.min(s.cargaGrupo, hasG?cc.grupos.length-1:0);
+      const list = hasG ? cc.grupos[gi].ejemplares : cc.ejemplares;
+      const tabs = hasG ? cc.grupos.map((g,i)=>({ nombre:g.nombre, count:g.ejemplares.length, active:i===gi,
+        style:'display:flex;align-items:center;gap:7px;height:38px;padding:0 15px;border-radius:10px;cursor:pointer;font-family:Archivo,sans-serif;font-size:13px;font-weight:600;white-space:nowrap;border:1px solid '+(i===gi?'#A8472A;background:#A8472A;color:#fff':'#E0D5BF;background:#FBF7EF;color:#5C5347'),
+        onClick:()=>this.setCargaGrupo(i) })) : [];
+      const rowBase='display:flex;align-items:center;gap:10px;border-radius:12px;padding:9px 11px;';
+      const rows=list.map(e=>({ id:e.id, no:e.no, prefijo:e.prefijo||'—', nombre:e.nombre,
+        prop: e.propietario||'Sin propietario', codigo:e.codigo||'—',
+        editing: rowBase + (s.editEjId===e.id ? 'background:#FBEEE6;border:1px solid #E4B7A6' : 'background:#FBF7EF;border:1px solid #EAE0CC'),
+        onEdit:()=>this.editEjemplar(e.id), onDel:()=>this.delEjemplar(e.id) }));
+      const f=s.form;
+      cargaV={ nombre:cc.nombre, grupo:cc.grupo, hasG, tabs, rows, count:list.length,
+        editing:!!s.editEjId, msg:s.cargaMsg,
+        f_prefijo:f.prefijo, f_nombre:f.nombre, f_sex:f.sex, f_codigo:f.codigo, f_fechaNac:f.fechaNac,
+        f_padrePre:f.padrePre, f_padreNom:f.padreNom, f_madrePre:f.madrePre, f_madreNom:f.madreNom,
+        f_criador:f.criador, f_propietario:f.propietario, f_microchip:f.microchip,
+        set:{ prefijo:this.setForm('prefijo'), nombre:this.setForm('nombre'), sex:this.setForm('sex'), codigo:this.setForm('codigo'), fechaNac:this.setForm('fechaNac'),
+          padrePre:this.setForm('padrePre'), padreNom:this.setForm('padreNom'), madrePre:this.setForm('madrePre'), madreNom:this.setForm('madreNom'),
+          criador:this.setForm('criador'), propietario:this.setForm('propietario'), microchip:this.setForm('microchip') },
+        onSave:this.saveEjemplar, onCancel:this.cancelEdit };
+    }
+    const pct = nCats? Math.round(nFin/nCats*100):0;
+    const tenants=[{id:'piura',nombre:'A.C.P.C.P. — Piura',sub:'Asoc. de Criadores y Propietarios · Piura'},{id:'norte',nombre:'Región Norte — Lambayeque',sub:'12 concursos activos'},{id:'lima',nombre:'A.N.C.P.C.P.P. — Lima',sub:'Sede nacional'}];
+    const tenantsView=tenants.map(t=>({ id:t.id, nombre:t.nombre, sub:t.sub, active:s.tenantSel===t.id,
+      style:'display:flex;align-items:center;gap:13px;width:100%;text-align:left;padding:14px 15px;border-radius:13px;cursor:pointer;transition:all .15s;border:1.5px solid '+(s.tenantSel===t.id?'#A8472A;background:#FBEEE6':'#E5DBC6;background:#FBF7EF'),
+      onClick:()=>this.setState({tenantSel:t.id}) }));
+    const doLogin=()=>this.setState({ adminLogged:true, screen:'dashboard' });
+
+    // ----- resultados -----
+    let resV=null;
+    const resCat = s.resCatId? cat.byId[s.resCatId] : null;
+    if(resCat){
+      const hasG=!!resCat.grupos; const gi=Math.min(s.resGrupo,hasG?resCat.grupos.length-1:0);
+      const list= hasG? resCat.grupos[gi].ejemplares : resCat.ejemplares;
+      const estado= hasG? resCat.grupos[gi].estado : resCat.estado;
+      const tabs= hasG? resCat.grupos.map((g,i)=>({ nombre:g.nombre, active:i===gi, em:this.estadoMeta(g.estado),
+        style:'height:38px;padding:0 15px;border-radius:10px;cursor:pointer;font-family:Archivo,sans-serif;font-size:13px;font-weight:600;white-space:nowrap;border:1px solid '+(i===gi?'#A8472A;background:#A8472A;color:#fff':'#E0D5BF;background:#FBF7EF;color:#5C5347'),
+        onClick:()=>this.setState({resGrupo:i}) })) : [];
+      const rows=list.map(e=>({ id:e.id, no:e.no, nombre:e.prefijo+' · '+e.nombre, cancha:e.cancha?('#'+e.cancha):'—', r:e.resultado,
+        set1:()=>this.setResult(e.id,1), set2:()=>this.setResult(e.id,2), set3:()=>this.setResult(e.id,3), setNone:()=>this.setResult(e.id,null),
+        b1:this.posBtn(e.resultado,1), b2:this.posBtn(e.resultado,2), b3:this.posBtn(e.resultado,3), bN:this.posBtn(e.resultado,null) }));
+      resV={ nombre:resCat.nombre, grupo:resCat.grupo, em:this.estadoMeta(estado), hasG, tabs, rows, count:list.length };
+    }
+
+    // ----- super admin (CanchaGo Central) -----
+    const asocs=this.asociaciones;
+    let sTotConc=0, sConcCur=0, sEjem=0, sScans=0, sAdmins=0;
+    asocs.forEach(a=>{ sTotConc+=a.concursos.length; a.concursos.forEach(c=>{ if(c.estado==='en_curso')sConcCur++; sEjem+=c.ejem; }); sScans+=a.scans; sAdmins+=a.admins.length; });
+    const sActivos=asocs.filter(a=>a.estado==='activo').length;
+    const sStats={ nAsoc:asocs.length, sActivos, sConcCur, sEjem, sScans, sAdmins, sTotConc };
+
+    const openAsoc=(id)=>this.nav('sasocdet',{selAsoc:id});
+    const openConc=(id,i)=>this.nav('sconc',{selAsoc:id, selConc:i});
+
+    // concursos en curso across platform
+    const sConcursosCur=[];
+    asocs.forEach(a=>a.concursos.forEach((c,i)=>{ if(c.estado==='en_curso') sConcursosCur.push({ asoc:a.corta, region:a.region, nombre:c.nombre, fechas:c.fechas, cats:c.cats, ejem:c.ejem, em:this.estadoMeta(c.estado), onOpen:()=>openConc(a.id,i) }); }));
+
+    // asociaciones list (filtered)
+    const aq=(s.asocQuery||'').trim().toLowerCase();
+    const asocList=asocs.filter(a=> !aq || a.nombre.toLowerCase().includes(aq) || a.corta.toLowerCase().includes(aq) || a.region.toLowerCase().includes(aq))
+      .map(a=>{ const em=this.asocEstadoMeta(a.estado); const pm=this.planMeta(a.plan);
+        return { id:a.id, nombre:a.nombre, corta:a.corta, region:a.region, plan:a.plan,
+          inicial:a.corta.replace(/[^A-Za-z]/g,'').slice(0,1)||'A',
+          nConc:a.concursos.length, nAdmins:a.admins.length, scans:a.scans.toLocaleString('es-PE'),
+          em, planStyle:'font-family:Archivo,sans-serif;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 9px;border-radius:20px;background:'+pm.bg+';color:'+pm.color,
+          badgeStyle:'display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:30px;font-family:Archivo,sans-serif;font-size:10.5px;font-weight:600;background:'+em.bg+';color:'+em.color,
+          onOpen:()=>openAsoc(a.id), onEnter:()=>this.enterAsoc(a.id) }; });
+
+    // selected association + concurso
+    const selA = asocs.find(a=>a.id===s.selAsoc) || asocs[0];
+    const selAem = this.asocEstadoMeta(selA.estado);
+    const selApm = this.planMeta(selA.plan);
+    const selAConcCur = selA.concursos.filter(c=>c.estado==='en_curso').length;
+    const selAEjem = selA.concursos.reduce((n,c)=>n+c.ejem,0);
+    const asocDet = {
+      nombre:selA.nombre, corta:selA.corta, region:selA.region, plan:selA.plan,
+      inicial:selA.corta.replace(/[^A-Za-z]/g,'').slice(0,1)||'A',
+      em:selAem, scans:selA.scans.toLocaleString('es-PE'),
+      planStyle:'font-family:Archivo,sans-serif;font-size:10px;font-weight:700;letter-spacing:.04em;padding:3px 10px;border-radius:20px;background:'+selApm.bg+';color:'+selApm.color,
+      badgeStyle:'display:inline-flex;align-items:center;gap:6px;padding:5px 13px;border-radius:30px;font-family:Archivo,sans-serif;font-size:12px;font-weight:600;background:'+selAem.bg+';color:'+selAem.color,
+      nConc:selA.concursos.length, nAdmins:selA.admins.length, ejem:selAEjem, concCur:selAConcCur,
+      id:selA.id, user:selA.user||((selA.admins[0]||{}).email)||'—', pass: selA.pass? '•'.repeat(Math.min(10,(selA.pass||'').length||8)) : '········',
+      suspendido: selA.estado==='suspendido',
+      onEnter:()=>this.enterAsoc(selA.id), onEdit:()=>this.startEditAsoc(selA.id), onToggle:()=>this.toggleAsocEstado(selA.id),
+      concursos:selA.concursos.map((c,i)=>({ nombre:c.nombre, fechas:c.fechas, cats:c.cats, ejem:c.ejem, em:this.estadoMeta(c.estado), onOpen:()=>openConc(selA.id,i) })),
+      admins:selA.admins.map(u=>({ nombre:u.nombre, email:u.email, rol:u.rol, ult:u.ult, inicial:u.nombre.slice(0,1) })),
+    };
+
+    // selected concurso (monitoring)
+    const selC = selA.concursos[Math.min(s.selConc||0, selA.concursos.length-1)] || { nombre:'Sin concursos', fechas:'—', estado:'por_iniciar', cats:0, ejem:0 };
+    const scDone = Math.round((selC.estado==='finalizado'?1:selC.estado==='en_curso'?0.55:0)*selC.cats);
+    const sConc = {
+      nombre:selC.nombre, fechas:selC.fechas, asoc:selA.corta, region:selA.region,
+      em:this.estadoMeta(selC.estado), cats:selC.cats, ejem:selC.ejem,
+      pct: selC.cats? Math.round(scDone/selC.cats*100):0, done:scDone, pend:selC.cats-scDone,
+      scans: selA.scans.toLocaleString('es-PE'), onAsoc:()=>openAsoc(selA.id),
+    };
+
+    // usuarios (platform staff + assoc admins)
+    const staff=[
+      {nombre:'Diego Cornejo',email:'diego@canchago.pe',rol:'Super admin',asoc:'CanchaGo Central',ult:'En línea',online:true},
+      {nombre:'Valeria Ríos',email:'valeria@canchago.pe',rol:'Soporte',asoc:'CanchaGo Central',ult:'Hace 15 min',online:false},
+    ];
+    const asocUsers=[]; asocs.forEach(a=>a.admins.forEach(u=>asocUsers.push({nombre:u.nombre,email:u.email,rol:u.rol,asoc:a.corta,ult:u.ult,online:false})));
+    const rolMeta=(r)=> r==='Super admin'?{color:'#7A5A12',bg:'#F3E7C8'} : r==='Soporte'?{color:'#8A3B24',bg:'#F3DCD3'} : r==='Administrador'?{color:'#2E6486',bg:'#D9E8F1'} : {color:'#4B6E3C',bg:'#DDE9CF'};
+    const superUsers=[...staff,...asocUsers].map(u=>{ const rm=rolMeta(u.rol); return { nombre:u.nombre, email:u.email, rol:u.rol, asoc:u.asoc, ult:u.ult, online:!!u.online,
+      inicial:u.nombre.slice(0,1),
+      rolStyle:'font-family:Archivo,sans-serif;font-size:10px;font-weight:700;letter-spacing:.03em;padding:3px 9px;border-radius:20px;background:'+rm.bg+';color:'+rm.color }; });
+
+    // ----- QR (decorative) -----
+    const qrN=25; const qrCells=[]; let qs=20260918;
+    const qrnd=()=>{ qs=(qs*1103515245+12345)&0x7fffffff; return qs/0x7fffffff; };
+    for(let y=0;y<qrN;y++){ for(let x=0;x<qrN;x++){
+      let on=qrnd()>0.46;
+      const fin=(fx,fy)=>x>=fx&&x<fx+7&&y>=fy&&y<fy+7;
+      const ring=(fx,fy)=>{ const lx=x-fx,ly=y-fy; return (lx===0||lx===6||ly===0||ly===6)||(lx>=2&&lx<=4&&ly>=2&&ly<=4); };
+      const sep=(fx,fy)=>x>=fx-1&&x<fx+8&&y>=fy-1&&y<fy+8;
+      if(fin(0,0))on=ring(0,0); else if(sep(0,0))on=false;
+      else if(fin(qrN-7,0))on=ring(qrN-7,0); else if(sep(qrN-7,0))on=false;
+      else if(fin(0,qrN-7))on=ring(0,qrN-7); else if(sep(0,qrN-7))on=false;
+      qrCells.push({ bg: on?'#241813':'transparent' });
+    }}
+
+    return {
+      nbInicio:this.tabBtn(s.screen==='landing'),
+      nbCat:this.tabBtn(s.screen==='categorias'||s.screen==='detalle'||s.screen==='ficha'||s.screen==='premios'),
+      nbBuscar:this.tabBtn(s.screen==='busqueda'),
+      // chrome
+      screen:s.screen, frameW:this.frameFor(s.bp), frameH: 812,
+      qrCells, qrUrl:'canchago.pe/c/piura-lxxix-2026',
+      isUserView, isAdminChrome, isSuperChrome,
+      goUser:this.goUser, goAdmin:this.goAdmin, goSuper:this.goSuper, doSLogin:this.doSLogin,
+      tabSuper:this.pillStyle(s.role==='super',true),
+      snavDash:this.navStyle(s.screen==='sdash'), snavAsoc:this.navStyle(s.screen==='sasoc'||s.screen==='sasocdet'), snavUsers:this.navStyle(s.screen==='susers'),
+      bpM:()=>this.setBp('mobile'), bpT:()=>this.setBp('tablet'), bpD:()=>this.setBp('desktop'),
+      tabUser:this.pillStyle(s.role==='user',true), tabAdmin:this.pillStyle(s.role==='admin',true),
+      bpMobileS:this.pillStyle(s.bp==='mobile',true), bpTabletS:this.pillStyle(s.bp==='tablet',true), bpDeskS:this.pillStyle(s.bp==='desktop',true),
+      jump:(e)=>{ const v=e.target.value; const sup=['slogin','sdash','sasoc','sasocdet','nuevaasoc','susers','sconc']; const adm=['login','dashboard','concursos','nuevoconc','carga','cargacat','resultados','qr']; if(sup.includes(v)){ this.setState({role:'super', superLogged: v!=='slogin', screen:v}); } else if(adm.includes(v)){ this.setState({role:'admin', adminLogged: v!=='login', screen:v}); } else { this.setState({role:'user',screen:v}); } },
+      screenOptions,
+      go,
+      navDash:this.navStyle(s.screen==='dashboard'), navRes:this.navStyle(s.screen==='resultados'), navCarga:this.navStyle(s.screen==='carga'), navQR:this.navStyle(s.screen==='qr'),
+
+      // screen flags
+      isLanding:s.screen==='landing', isCategorias:s.screen==='categorias', isDetalle:s.screen==='detalle',
+      isFicha:s.screen==='ficha', isPremios:s.screen==='premios', isBusqueda:s.screen==='busqueda',
+      isLogin:s.screen==='login', isDashboard:s.screen==='dashboard', isCarga:s.screen==='carga',
+      isResultados:s.screen==='resultados', isQR:s.screen==='qr', isCargaCat:s.screen==='cargacat',
+      isSLogin:s.screen==='slogin', isSDash:s.screen==='sdash', isSAsoc:s.screen==='sasoc',
+      isSAsocDet:s.screen==='sasocdet', isSUsers:s.screen==='susers', isSConc:s.screen==='sconc',
+      sStats, sConcursosCur, asocList, asocDet, sConc, superUsers, asocQuery:s.asocQuery,
+      setAsocQuery:(e)=>this.setState({asocQuery:e.target.value}),
+      startNuevaAsoc:this.startNuevaAsoc,
+      isNuevaAsoc:s.screen==='nuevaasoc',
+      asocFormView:{ nombre:s.asocForm.nombre, corta:s.asocForm.corta, region:s.asocForm.region, plan:s.asocForm.plan, email:s.asocForm.email, user:s.asocForm.user, pass:s.asocForm.pass, msg:s.asocMsg, editing:!!s.editAsocId,
+        set:{ nombre:this.setAsocForm('nombre'), corta:this.setAsocForm('corta'), region:this.setAsocForm('region'), plan:this.setAsocForm('plan'), email:this.setAsocForm('email'), user:this.setAsocForm('user'), pass:this.setAsocForm('pass') },
+        onSave:this.saveNuevaAsoc },
+      asocFormTitle: s.editAsocId?'Editar asociación':'Registrar asociación',
+      asocSaveLabel: s.editAsocId?'Guardar cambios':'Crear asociación y acceso',
+      impersonating:s.impersonating, exitImpersonation:this.exitImpersonation,
+      asocToggleLabel: asocDet.suspendido ? 'Reactivar asociación' : 'Suspender asociación',
+      asocToggleStyle: asocDet.suspendido
+        ? 'height:46px;padding:0 16px;border:1px solid #C7D9B3;border-radius:12px;background:#DDE9CF;color:#4B6E3C;font-family:Archivo,sans-serif;font-size:13px;font-weight:600;cursor:pointer'
+        : 'height:46px;padding:0 16px;border:1px solid #E4C4B8;border-radius:12px;background:#F3DCD3;color:#8A3B24;font-family:Archivo,sans-serif;font-size:13px;font-weight:600;cursor:pointer',
+
+      // shared data
+      C:cat.concurso, concursoEm, stats, pct:(nCats?Math.round(nFin/nCats*100):0),
+
+      // landing
+      destacados,
+      lvA:this.lvStyle(s.landingVariant==='a'), lvB:this.lvStyle(s.landingVariant==='b'), lvC:this.lvStyle(s.landingVariant==='c'),
+      setVarA:()=>this.setState({landingVariant:'a'}), setVarB:()=>this.setState({landingVariant:'b'}), setVarC:()=>this.setState({landingVariant:'c'}),
+      varA:s.landingVariant==='a', varB:s.landingVariant==='b', varC:s.landingVariant==='c',
+      query:s.query, setQuery, onSearchKey, submitSearch,
+
+      // categorias
+      gruposView, filterPills, noResults, catQuery:s.catQuery,
+      setCatQuery:(e)=>this.setState({catQuery:e.target.value}),
+
+      // detalle / ficha / premios / busqueda
+      det, fic, premiosView, results, hasResults:results.length>0, searchEmpty:bq.length>=2 && results.length===0, showSearchHint:bq.length<2, bqLen:bq.length,
+
+      // admin
+      dashCats, dashCatsDel, catVacio, totalEjem, tenantsView, doLogin, resV, resCatPicked:!!resCat, noResCat:!resCat,
+      concursosView, concCounts, activeConcMeta, concFormView, newCatView,
+      concFormTitle: s.editConcId?'Editar concurso':'Nuevo concurso',
+      adminAsocCorta: (this.asociaciones.find(a=>a.id===s.adminAsocId)||{}).corta || 'Asociación',
+      concFormHead: s.editConcId?'Editar datos del concurso':'Crear un concurso',
+      concSaveLabel: s.editConcId?'Guardar cambios':'Crear concurso',
+      isConcursos:s.screen==='concursos', isNuevoConc:s.screen==='nuevoconc',
+      navConcursos:this.navStyle(s.screen==='concursos'||s.screen==='nuevoconc'),
+      goConcursos:this.goConcursos, startNewConc:this.startNewConc,
+      cargaV, navCargaCat:this.navStyle(s.screen==='cargacat'),
+      cargaFormTitle: (cargaV&&cargaV.editing)?'Editar ejemplar':'Nuevo ejemplar',
+      cargaSaveLabel: (cargaV&&cargaV.editing)?'Guardar cambios':'✚ Agregar al padrón',
+      cargaHasRows: !!(cargaV&&cargaV.rows.length),
+      cargaEmpty: !!(cargaV&&cargaV.rows.length===0),
+      cargaNoCat: s.screen==='cargacat' && !cc,
+      cargaGridCols: s.bp==='mobile' ? '1fr' : '1.15fr 1fr',
+      lblSt:'font-family:Archivo,sans-serif;font-size:11px;color:#8c8270;font-weight:600',
+      inpSt:'height:44px;border:1px solid #E0D5BF;border-radius:10px;background:#fff;padding:0 12px;font-family:Spectral,serif;font-size:14px;color:#2A2118;width:100%;box-sizing:border-box;outline:none',
+    };
+  }
+}
+</script>
+</body>
+</html>

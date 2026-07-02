@@ -1,26 +1,79 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-cream: #f7f2e8;
+  --color-card: #fbf7ef;
+  --color-ink: #241813;
+  --color-ink-soft: #2a2118;
+  --color-muted: #6b6353;
+  --color-muted-soft: #8c8270;
+  --color-border: #e0d5bf;
+  --color-border-soft: #eae0cc;
+
+  --color-leather: #a8472a;
+  --color-leather-dark: #8a3b24;
+
+  --color-gold: #9a6a12;
+  --color-gold-light: #e0b45a;
+  --color-gold-lighter: #f3e7c8;
+  --color-gold-dark: #7a5a12;
+
+  --color-field: #4b6e3c;
+  --color-field-light: #9dbe7e;
+  --color-field-lighter: #dde9cf;
+
+  --color-sky: #2e6486;
+  --color-sky-mid: #3e7fa6;
+  --color-sky-light: #8fc0de;
+  --color-sky-lighter: #d9e8f1;
+
+  --color-hide: #2f2a22;
+  --color-hide-dark: #211d16;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+  --color-cream: var(--color-cream);
+  --color-card: var(--color-card);
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-muted: var(--color-muted);
+  --color-muted-soft: var(--color-muted-soft);
+  --color-border: var(--color-border);
+  --color-border-soft: var(--color-border-soft);
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-leather: var(--color-leather);
+  --color-leather-dark: var(--color-leather-dark);
+
+  --color-gold: var(--color-gold);
+  --color-gold-light: var(--color-gold-light);
+  --color-gold-lighter: var(--color-gold-lighter);
+  --color-gold-dark: var(--color-gold-dark);
+
+  --color-field: var(--color-field);
+  --color-field-light: var(--color-field-light);
+  --color-field-lighter: var(--color-field-lighter);
+
+  --color-sky: var(--color-sky);
+  --color-sky-mid: var(--color-sky-mid);
+  --color-sky-light: var(--color-sky-light);
+  --color-sky-lighter: var(--color-sky-lighter);
+
+  --color-hide: var(--color-hide);
+  --color-hide-dark: var(--color-hide-dark);
+
+  --font-display: var(--font-marcellus), Georgia, serif;
+  --font-serif: var(--font-spectral), Georgia, serif;
+  --font-sans: var(--font-archivo), Arial, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-leather);
+  color: #fff;
 }
