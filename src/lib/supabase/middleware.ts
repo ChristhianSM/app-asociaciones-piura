@@ -27,5 +27,16 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  return { supabaseResponse, user };
+  let rol: string | null = null;
+
+  if (user) {
+    const { data: perfil } = await supabase
+      .from("perfiles")
+      .select("rol")
+      .eq("id", user.id)
+      .single();
+    rol = perfil?.rol ?? null;
+  }
+
+  return { supabaseResponse, user, rol };
 }

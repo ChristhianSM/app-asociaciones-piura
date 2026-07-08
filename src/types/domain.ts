@@ -15,6 +15,8 @@ export interface Asociacion {
   id: string;
   nombre: string;
   nombreCorto: string;
+  region: string | null;
+  activo: boolean;
 }
 
 export interface Concurso {

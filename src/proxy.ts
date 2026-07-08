@@ -18,17 +18,17 @@ export async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const { supabaseResponse, user } = await updateSession(request);
+  const { supabaseResponse, user, rol } = await updateSession(request);
 
   const isAdminRoute = pathname.startsWith("/admin") && pathname !== "/admin/login";
   const isCentralRoute = pathname.startsWith("/central") && pathname !== "/central/login";
 
-  // TODO: cuando exista la tabla `perfiles` en Supabase, además de verificar
-  // que hay sesión hay que verificar que perfil.rol coincide con la sección
-  // (admin_asociacion vs super_admin) antes de dejar pasar la request.
-  if ((isAdminRoute || isCentralRoute) && !user) {
-    const loginPath = isAdminRoute ? "/admin/login" : "/central/login";
-    return NextResponse.redirect(new URL(loginPath, request.url));
+  if (isCentralRoute && (!user || rol !== "super_admin")) {
+    return NextResponse.redirect(new URL("/central/login", request.url));
+  }
+
+  if (isAdminRoute && (!user || rol !== "admin_asociacion")) {
+    return NextResponse.redirect(new URL("/admin/login", request.url));
   }
 
   return supabaseResponse;
